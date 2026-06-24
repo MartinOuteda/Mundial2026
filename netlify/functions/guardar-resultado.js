@@ -49,7 +49,7 @@ exports.handler = async (event) => {
 
     // Recalcular tabla de posiciones
     const tablaResult = await client.query(
-      `SELECT equipo_id, grupo FROM tabla_posiciones WHERE grupo = $1`,
+      `SELECT equipo_id FROM tabla_posiciones WHERE grupo = $1`,
       [grupo]
     );
 
@@ -58,14 +58,17 @@ exports.handler = async (event) => {
 
       const statsResult = await client.query(
         `SELECT 
-           COUNT(*) as pj,
-           SUM(CASE WHEN (equipo_1_id = $1 AND goles_1 > goles_2) OR (equipo_2_id = $1 AND goles_2 > goles_1) THEN 1 ELSE 0 END) as v,
-           SUM(CASE WHEN goles_1 = goles_2 AND (equipo_1_id = $1 OR equipo_2_id = $1) THEN 1 ELSE 0 END) as e,
-           SUM(CASE WHEN (equipo_1_id = $1 AND goles_1 < goles_2) OR (equipo_2_id = $1 AND goles_2 < goles_1) THEN 1 ELSE 0 END) as d,
-           SUM(CASE WHEN equipo_1_id = $1 THEN goles_1 WHEN equipo_2_id = $1 THEN goles_2 ELSE 0 END) as gf,
-           SUM(CASE WHEN equipo_1_id = $1 THEN goles_2 WHEN equipo_2_id = $1 THEN goles_1 ELSE 0 END) as gc
+           COUNT(*) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL) as pj,
+           COUNT(*) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL AND 
+             ((equipo_1_id = $1 AND goles_1 > goles_2) OR (equipo_2_id = $1 AND goles_2 > goles_1))) as v,
+           COUNT(*) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL AND 
+             goles_1 = goles_2 AND (equipo_1_id = $1 OR equipo_2_id = $1)) as e,
+           COUNT(*) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL AND 
+             ((equipo_1_id = $1 AND goles_1 < goles_2) OR (equipo_2_id = $1 AND goles_2 < goles_1))) as d,
+           COALESCE(SUM(CASE WHEN equipo_1_id = $1 THEN goles_1 WHEN equipo_2_id = $1 THEN goles_2 ELSE 0 END) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL), 0) as gf,
+           COALESCE(SUM(CASE WHEN equipo_1_id = $1 THEN goles_2 WHEN equipo_2_id = $1 THEN goles_1 ELSE 0 END) FILTER (WHERE goles_1 IS NOT NULL AND goles_2 IS NOT NULL), 0) as gc
          FROM partidos_grupos 
-         WHERE grupo = $2 AND (equipo_1_id = $1 OR equipo_2_id = $1) AND goles_1 IS NOT NULL`,
+         WHERE grupo = $2 AND (equipo_1_id = $1 OR equipo_2_id = $1)`,
         [equipoId, grupo]
       );
 

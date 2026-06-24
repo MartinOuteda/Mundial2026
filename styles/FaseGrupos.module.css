@@ -79,13 +79,13 @@
 
 .tablaHeader {
   display: grid;
-  grid-template-columns: 35px 1fr 35px 35px 35px 35px;
-  gap: 8px;
-  padding: 12px;
+  grid-template-columns: 40px 1fr 50px 50px 50px 50px;
+  gap: 12px;
+  padding: 15px;
   background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
   border-radius: 6px;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #d4af37;
   letter-spacing: 0.5px;
   margin-bottom: 10px;
@@ -100,13 +100,13 @@
 
 .tablaRow {
   display: grid;
-  grid-template-columns: 35px 1fr 35px 35px 35px 35px;
-  gap: 8px;
-  padding: 12px;
+  grid-template-columns: 40px 1fr 50px 50px 50px 50px;
+  gap: 12px;
+  padding: 15px;
   background: rgba(42, 52, 81, 0.3);
   border-radius: 6px;
   align-items: center;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   transition: background 0.2s ease;
 }
 
