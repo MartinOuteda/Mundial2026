@@ -71,11 +71,15 @@ export default function FaseGrupos() {
     setMensajeGuardado('Guardando...');
     
     try {
+      // Guardar todos los partidos en paralelo
+      const promesas = [];
+      
       for (const grupo of grupos) {
-        fixturePartidos[grupo].forEach(async (partido, idx) => {
+        for (let idx = 0; idx < fixturePartidos[grupo].length; idx++) {
+          const partido = fixturePartidos[grupo][idx];
           const { goles1, goles2 } = resultados[grupo][idx];
           
-          await fetch('/.netlify/functions/guardar-resultado', {
+          const promesa = fetch('/.netlify/functions/guardar-resultado', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -86,13 +90,17 @@ export default function FaseGrupos() {
               goles2: goles2 || 0
             })
           });
-        });
+          
+          promesas.push(promesa);
+        }
       }
       
-      setTimeout(() => {
-        setMensajeGuardado('✓ Resultados guardados correctamente');
-        cargarTablas();
-      }, 1500);
+      // Esperar a que TODOS terminen
+      await Promise.all(promesas);
+      
+      // Ahora sí recargar los datos
+      setMensajeGuardado('✓ Resultados guardados correctamente');
+      await cargarTablas();
       
       setTimeout(() => setMensajeGuardado(''), 3000);
     } catch (error) {
@@ -138,12 +146,20 @@ export default function FaseGrupos() {
             <h2>Grupo {grupo}</h2>
             
             <div className={styles.partidos}>
-              {fixturePartidos[grupo].map((partido, idx) => (
+              {fixturePartidos[grupo].map((partido, idx) => {
+                const eq1 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo1);
+                const eq2 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo2);
+                
+                return (
                 <div key={idx} className={styles.partido}>
                   <div className={styles.equipos}>
-                    <span className={styles.equipo1}>{partido.equipo1}</span>
+                    <span className={styles.equipo1}>
+                      {eq1?.bandera} {partido.equipo1}
+                    </span>
                     <span className={styles.vs}>vs</span>
-                    <span className={styles.equipo2}>{partido.equipo2}</span>
+                    <span className={styles.equipo2}>
+                      {eq2?.bandera} {partido.equipo2}
+                    </span>
                   </div>
                   
                   <div className={styles.goles}>
@@ -170,7 +186,8 @@ export default function FaseGrupos() {
 
                   <span className={styles.jornada}>J{partido.jornada}</span>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {tablas[grupo] && (
