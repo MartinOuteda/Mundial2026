@@ -1,0 +1,173 @@
+.terceros {
+  padding: 2rem 0;
+}
+
+.terceros h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--gray-900);
+}
+
+.info {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid var(--warning);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+}
+
+.info p {
+  margin-bottom: 0.75rem;
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+
+.info p:last-child {
+  margin-bottom: 0;
+}
+
+.info strong {
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+.tabla {
+  width: 100%;
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+}
+
+.tabla thead {
+  background: var(--primary);
+  color: white;
+}
+
+.tabla th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.tabla tbody tr {
+  border-bottom: 1px solid var(--gray-200);
+  transition: background-color 0.2s ease;
+}
+
+.tabla tbody tr:hover {
+  background-color: var(--gray-50);
+}
+
+.tabla tbody tr.clasificado {
+  background-color: #ecfdf5;
+  font-weight: 500;
+}
+
+.tabla td {
+  padding: 1rem;
+  color: var(--gray-700);
+}
+
+.ranking {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.check {
+  display: inline-block;
+  margin-left: 0.5rem;
+  color: var(--success);
+  font-weight: 700;
+  animation: checkmark 0.3s ease;
+}
+
+@keyframes checkmark {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.equipo {
+  font-weight: 500;
+  color: var(--gray-900);
+}
+
+.puntos {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.si {
+  display: inline-block;
+  background: var(--success);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.no {
+  display: inline-block;
+  background: var(--gray-300);
+  color: var(--gray-700);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.sinDatos {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-500);
+  font-size: 1rem;
+  background: white;
+  border-radius: var(--border-radius);
+}
+
+.btnActualizar {
+  margin-top: 1.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cargando {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-600);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .terceros h1 {
+    font-size: 1.5rem;
+  }
+
+  .tabla {
+    font-size: 0.85rem;
+  }
+
+  .tabla th, .tabla td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .ranking {
+    font-size: 1rem;
+  }
+
+  .check {
+    margin-left: 0.25rem;
+  }
+}
