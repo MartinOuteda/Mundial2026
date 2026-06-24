@@ -13,4 +13,4 @@
   status = 200
 
 [context.production]
-  environment = { NODE_VERSION = "18.0.0" }
+  environment = { NODE_VERSION = "20.x" }
