@@ -1,22 +1,14 @@
 import { Client } from 'pg';
 
-async function conectarDB() {
+export default async function handler(req, res) {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
   });
-  await client.connect();
-  return client;
-}
-
-export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
-  const client = await conectarDB();
 
   try {
-    const query = `
+    await client.connect();
+
+    const resultado = await client.query(`
       SELECT 
         ce.id,
         ce.fase,
@@ -34,10 +26,8 @@ export default async function handler(req, res) {
       LEFT JOIN equipos e2 ON ce.equipo_2_id = e2.id
       LEFT JOIN equipos eg ON ce.ganador_id = eg.id
       ORDER BY ce.fase, ce.partido_numero
-    `;
+    `);
 
-    const resultado = await client.query(query);
-    
     // Agrupar por fase
     const cuadro = {};
     resultado.rows.forEach(partido => {
@@ -49,8 +39,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json(cuadro);
   } catch (error) {
-    console.error('Error obteniendo cuadro:', error);
-    return res.status(500).json({ error: 'Error al obtener datos' });
+    console.error('Error:', error);
+    return res.status(500).json({ error: error.message });
   } finally {
     await client.end();
   }
