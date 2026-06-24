@@ -5,16 +5,15 @@ import { partidos as fixturePartidos, equipos as fixtureEquipos, grupos } from '
 export default function FaseGrupos() {
   const [resultados, setResultados] = useState({});
   const [tablas, setTablas] = useState({});
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [mensajeGuardado, setMensajeGuardado] = useState('');
 
-  // Inicializar estado de resultados
   useEffect(() => {
     const init = {};
     grupos.forEach(grupo => {
       init[grupo] = {};
-      fixturePartidos[grupo].forEach((partido, idx) => {
+      fixturePartidos[grupo].forEach((_, idx) => {
         init[grupo][idx] = { goles1: '', goles2: '' };
       });
     });
@@ -33,7 +32,7 @@ export default function FaseGrupos() {
             ...prev,
             [grupo]: data.tabla
           }));
-          // Cargar resultados existentes
+          
           data.partidos.forEach((partido, idx) => {
             if (partido.goles_1 !== null) {
               setResultados(prev => ({
@@ -71,7 +70,6 @@ export default function FaseGrupos() {
     setMensajeGuardado('Guardando...');
     
     try {
-      // Guardar todos los partidos en paralelo
       const promesas = [];
       
       for (const grupo of grupos) {
@@ -79,26 +77,24 @@ export default function FaseGrupos() {
           const partido = fixturePartidos[grupo][idx];
           const { goles1, goles2 } = resultados[grupo][idx];
           
-          const promesa = fetch('/.netlify/functions/guardar-resultado', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              grupo,
-              equipo1: partido.equipo1,
-              equipo2: partido.equipo2,
-              goles1: goles1 || 0,
-              goles2: goles2 || 0
-            })
-          });
-          
-          promesas.push(promesa);
+          if (goles1 !== '' && goles2 !== '') {
+            promesas.push(
+              fetch('/.netlify/functions/guardar-resultado', {
+                method: 'POST',
+                body: JSON.stringify({
+                  grupo,
+                  equipo1: partido.equipo1,
+                  equipo2: partido.equipo2,
+                  goles1: parseInt(goles1),
+                  goles2: parseInt(goles2)
+                })
+              })
+            );
+          }
         }
       }
-      
-      // Esperar a que TODOS terminen
+
       await Promise.all(promesas);
-      
-      // Ahora sí recargar los datos
       setMensajeGuardado('✓ Resultados guardados correctamente');
       await cargarTablas();
       
@@ -111,136 +107,110 @@ export default function FaseGrupos() {
     setGuardando(false);
   };
 
-  const contarCompletados = () => {
-    let total = 0;
-    for (const grupo of grupos) {
-      fixturePartidos[grupo].forEach((_, idx) => {
-        const { goles1, goles2 } = resultados[grupo]?.[idx] || {};
-        if (goles1 !== '' && goles2 !== '') total++;
-      });
-    }
-    return total;
-  };
-
   if (cargando) {
     return <div className={styles.cargando}>Cargando...</div>;
   }
 
   return (
-    <div className={styles.faseGrupos}>
-      <h1>⚽ Fase de Grupos</h1>
-      
-      <div className={styles.progreso}>
-        <p>Partidos completados: <strong>{contarCompletados()} / {grupos.length * 6}</strong></p>
-        <div className={styles.barraProgreso}>
-          <div 
-            className={styles.relleno}
-            style={{ width: `${(contarCompletados() / (grupos.length * 6)) * 100}%` }}
-          ></div>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>⚽ FASE DE GRUPOS</h1>
+        <p>Predecí los resultados y elige tu campeón</p>
       </div>
 
-      <div className={styles.grupos}>
+      <div className={styles.gruposGrid}>
         {grupos.map(grupo => (
-          <div key={grupo} className={styles.grupo}>
-            <h2>Grupo {grupo}</h2>
-            
+          <div key={grupo} className={styles.grupoCard}>
+            <div className={styles.grupoTitle}>
+              <h2>GRUPO {grupo}</h2>
+              <span className={styles.subtitle}>4 EQUIPOS · 6 PARTIDOS</span>
+            </div>
+
+            {/* TABLA DE POSICIONES */}
+            <div className={styles.tabla}>
+              <div className={styles.tablaHeader}>
+                <div className={styles.colEquipo}>EQUIPO</div>
+                <div className={styles.colPts}>PTS</div>
+                <div className={styles.colPj}>PJ</div>
+                <div className={styles.colGf}>GF</div>
+                <div className={styles.colGc}>GC</div>
+                <div className={styles.colDg}>DG</div>
+              </div>
+              <div className={styles.tablaBody}>
+                {(tablas[grupo] || []).map((equipo, idx) => (
+                  <div key={idx} className={styles.tablaRow}>
+                    <div className={styles.posicion}>{idx + 1}</div>
+                    <div className={styles.equipoCell}>
+                      <span className={styles.bandera}>
+                        {fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre)?.bandera}
+                      </span>
+                      <span className={styles.nombre}>{equipo.nombre.toUpperCase()}</span>
+                    </div>
+                    <div className={styles.pts}>{equipo.puntos}</div>
+                    <div className={styles.pj}>{equipo.partidos_jugados}</div>
+                    <div className={styles.gf}>{equipo.goles_a_favor}</div>
+                    <div className={styles.gc}>{equipo.goles_en_contra}</div>
+                    <div className={styles.dg}>{equipo.goles_a_favor - equipo.goles_en_contra}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PARTIDOS */}
             <div className={styles.partidos}>
               {fixturePartidos[grupo].map((partido, idx) => {
                 const eq1 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo1);
                 const eq2 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo2);
+                const jornada = Math.floor(idx / 2) + 1;
                 
                 return (
-                <div key={idx} className={styles.partido}>
-                  <div className={styles.equipos}>
-                    <span className={styles.equipo1}>
-                      {eq1?.bandera} {partido.equipo1}
-                    </span>
-                    <span className={styles.vs}>vs</span>
-                    <span className={styles.equipo2}>
-                      {eq2?.bandera} {partido.equipo2}
-                    </span>
-                  </div>
-                  
-                  <div className={styles.goles}>
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      value={resultados[grupo]?.[idx]?.goles1 || ''}
-                      onChange={(e) => handleGolesChange(grupo, idx, '1', e.target.value)}
-                      placeholder="0"
-                      className={styles.inputGoles}
-                    />
-                    <span className={styles.separador}>-</span>
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      value={resultados[grupo]?.[idx]?.goles2 || ''}
-                      onChange={(e) => handleGolesChange(grupo, idx, '2', e.target.value)}
-                      placeholder="0"
-                      className={styles.inputGoles}
-                    />
-                  </div>
+                  <div key={idx} className={styles.partido}>
+                    <div className={styles.equipoIzq}>
+                      <span className={styles.flagIzq}>{eq1?.bandera}</span>
+                      <span className={styles.nombreCorto}>{partido.equipo1.substring(0, 3).toUpperCase()}</span>
+                    </div>
 
-                  <span className={styles.jornada}>J{partido.jornada}</span>
-                </div>
+                    <div className={styles.goles}>
+                      <input
+                        type="number"
+                        min="0"
+                        max="99"
+                        value={resultados[grupo][idx]?.goles1 || ''}
+                        onChange={(e) => handleGolesChange(grupo, idx, '1', e.target.value)}
+                        className={styles.golesInput}
+                      />
+                      <span className={styles.vs}>vs</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="99"
+                        value={resultados[grupo][idx]?.goles2 || ''}
+                        onChange={(e) => handleGolesChange(grupo, idx, '2', e.target.value)}
+                        className={styles.golesInput}
+                      />
+                    </div>
+
+                    <div className={styles.equipoDer}>
+                      <span className={styles.nombreCorto}>{partido.equipo2.substring(0, 3).toUpperCase()}</span>
+                      <span className={styles.flagDer}>{eq2?.bandera}</span>
+                    </div>
+                  </div>
                 );
               })}
             </div>
-
-            {tablas[grupo] && (
-              <div className={styles.tabla}>
-                <h3>Tabla de posiciones</h3>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Equipo</th>
-                      <th>PJ</th>
-                      <th>G</th>
-                      <th>E</th>
-                      <th>P</th>
-                      <th>GF</th>
-                      <th>GC</th>
-                      <th>DG</th>
-                      <th>PTS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tablas[grupo].map((equipo, i) => (
-                      <tr key={i} className={i < 2 ? styles.clasificado : ''}>
-                        <td className={styles.equipo}>{equipo.nombre}</td>
-                        <td>{equipo.partidos_jugados}</td>
-                        <td>{equipo.victorias}</td>
-                        <td>{equipo.empates}</td>
-                        <td>{equipo.derrotas}</td>
-                        <td>{equipo.goles_a_favor}</td>
-                        <td>{equipo.goles_en_contra}</td>
-                        <td>{equipo.diferencia}</td>
-                        <td className={styles.puntos}><strong>{equipo.puntos}</strong></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
         ))}
       </div>
 
-      <div className={styles.acciones}>
+      <div className={styles.footer}>
         <button 
           onClick={guardarResultados}
           disabled={guardando}
           className={styles.btnGuardar}
         >
-          {guardando ? 'Guardando...' : '💾 Guardar Resultados'}
+          {guardando ? '⏳ Guardando...' : '💾 GUARDAR RESULTADOS'}
         </button>
-        
-        {mensajeGuardado && (
-          <div className={styles.mensaje}>{mensajeGuardado}</div>
-        )}
+        {mensajeGuardado && <p className={styles.mensaje}>{mensajeGuardado}</p>}
       </div>
     </div>
   );
