@@ -1,21 +1,30 @@
-export default async function handler(req, res) {
-  console.log('🔵 obtener-grupo iniciado');
-  console.log('DATABASE_URL existe:', !!process.env.DATABASE_URL);
+const { Client } = require('pg');
+
+exports.handler = async (event) => {
+  console.log('Iniciando obtener-grupo');
   
   try {
-    const { grupo } = req.query;
+    const grupo = event.queryStringParameters?.grupo;
+    
     if (!grupo) {
-      return res.status(400).json({ error: 'Grupo requerido' });
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Grupo requerido' })
+      };
     }
 
-    const { Client } = await import('pg');
+    if (!process.env.DATABASE_URL) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'DATABASE_URL no configurada' })
+      };
+    }
+
     const client = new Client({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
+      connectionString: process.env.DATABASE_URL
     });
 
     await client.connect();
-    console.log('✅ Conectado a BD');
 
     const partidos = await client.query(
       `SELECT e1.nombre as equipo1, e2.nombre as equipo2, pg.goles_1, pg.goles_2, pg.jornada
@@ -23,7 +32,7 @@ export default async function handler(req, res) {
        JOIN equipos e1 ON pg.equipo_1_id = e1.id
        JOIN equipos e2 ON pg.equipo_2_id = e2.id
        WHERE pg.grupo = $1
-       ORDER BY pg.jornada, pg.id`,
+       ORDER BY pg.jornada`,
       [grupo]
     );
 
@@ -38,18 +47,25 @@ export default async function handler(req, res) {
     );
 
     await client.end();
-    
-    return res.status(200).json({
-      grupo,
-      partidos: partidos.rows || [],
-      tabla: tabla.rows || []
-    });
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grupo,
+        partidos: partidos.rows,
+        tabla: tabla.rows
+      })
+    };
 
   } catch (error) {
-    console.error('❌ ERROR en obtener-grupo:', error.message);
-    return res.status(500).json({ 
-      error: error.message,
-      type: error.constructor.name
-    });
+    console.error('Error:', error.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ 
+        error: error.message,
+        stack: error.stack
+      })
+    };
   }
-}
+};

@@ -1,71 +1,60 @@
-import { Client } from 'pg';
+const { Client } = require('pg');
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'Método no permitido' }) };
   }
 
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
   try {
-    const { grupo, equipo1, equipo2, goles1, goles2 } = req.body;
+    const { grupo, equipo1, equipo2, goles1, goles2 } = JSON.parse(event.body);
 
     if (!grupo || !equipo1 || !equipo2 || goles1 === undefined || goles2 === undefined) {
-      return res.status(400).json({ error: 'Datos incompletos' });
+      return { statusCode: 400, body: JSON.stringify({ error: 'Datos incompletos' }) };
     }
 
+    const client = new Client({ connectionString: process.env.DATABASE_URL });
     await client.connect();
 
-    // 1. Obtener IDs de los equipos
-    const eq1Result = await client.query(
+    // Obtener IDs de equipos
+    const eq1 = await client.query(
       'SELECT id FROM equipos WHERE nombre = $1 AND grupo = $2',
       [equipo1, grupo]
     );
-    const eq2Result = await client.query(
+    const eq2 = await client.query(
       'SELECT id FROM equipos WHERE nombre = $1 AND grupo = $2',
       [equipo2, grupo]
     );
 
-    if (eq1Result.rows.length === 0 || eq2Result.rows.length === 0) {
-      return res.status(400).json({ 
-        error: 'Equipos no encontrados',
-        equipo1: eq1Result.rows.length > 0 ? 'OK' : 'NO ENCONTRADO',
-        equipo2: eq2Result.rows.length > 0 ? 'OK' : 'NO ENCONTRADO'
-      });
+    if (eq1.rows.length === 0 || eq2.rows.length === 0) {
+      await client.end();
+      return { statusCode: 400, body: JSON.stringify({ error: 'Equipos no encontrados' }) };
     }
 
-    const id1 = eq1Result.rows[0].id;
-    const id2 = eq2Result.rows[0].id;
+    // Actualizar partido
+    const id1 = eq1.rows[0].id;
+    const id2 = eq2.rows[0].id;
+    
+    await client.query(
+      `UPDATE partidos_grupos 
+       SET goles_1 = $1, goles_2 = $2, actualizado_en = CURRENT_TIMESTAMP
+       WHERE grupo = $3 AND 
+         ((equipo_1_id = $4 AND equipo_2_id = $5) OR 
+          (equipo_1_id = $5 AND equipo_2_id = $4))`,
+      [goles1, goles2, grupo, id1, id2]
+    );
 
-    // 2. Actualizar el partido
-    const updateResult = await client.query(`
-      UPDATE partidos_grupos 
-      SET goles_1 = $1, goles_2 = $2, actualizado_en = CURRENT_TIMESTAMP
-      WHERE grupo = $3 AND 
-        ((equipo_1_id = $4 AND equipo_2_id = $5) OR 
-         (equipo_1_id = $5 AND equipo_2_id = $4))
-      RETURNING id
-    `, [goles1, goles2, grupo, id1, id2]);
+    await client.end();
 
-    if (updateResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Partido no actualizado. Verifica los equipos.' });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'Resultado guardado correctamente',
-      partidoId: updateResult.rows[0].id
-    });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true, message: 'Resultado guardado' })
+    };
 
   } catch (error) {
-    console.error('Error en guardar-resultado:', error);
-    return res.status(500).json({ 
-      error: 'Error al guardar', 
-      detalle: error.message 
-    });
-  } finally {
-    await client.end();
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message })
+    };
   }
-}
+};

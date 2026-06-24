@@ -1,36 +1,30 @@
-import { Client } from 'pg';
+const { Client } = require('pg');
 
-export default async function handler(req, res) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
+exports.handler = async (event) => {
   try {
+    const client = new Client({ connectionString: process.env.DATABASE_URL });
     await client.connect();
 
-    const terceros = await client.query(`
-      SELECT 
-        e.nombre,
-        e.grupo,
-        tp.partidos_jugados,
-        tp.victorias,
-        tp.empates,
-        tp.derrotas,
-        tp.goles_a_favor,
-        tp.goles_en_contra,
-        tp.puntos,
-        (tp.goles_a_favor - tp.goles_en_contra) as diferencia_goles
+    const resultado = await client.query(`
+      SELECT e.nombre, e.grupo, tp.puntos, tp.goles_a_favor
       FROM tabla_posiciones tp
       JOIN equipos e ON tp.equipo_id = e.id
-      WHERE tp.grupo IS NOT NULL
-      ORDER BY tp.puntos DESC, diferencia_goles DESC, tp.goles_a_favor DESC
+      ORDER BY tp.puntos DESC, tp.goles_a_favor DESC
     `);
 
-    return res.status(200).json(terceros.rows);
+    await client.end();
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(resultado.rows)
+    };
+
   } catch (error) {
     console.error('Error:', error);
-    return res.status(500).json({ error: error.message });
-  } finally {
-    await client.end();
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message })
+    };
   }
-}
+};

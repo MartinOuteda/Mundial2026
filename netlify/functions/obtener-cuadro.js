@@ -1,26 +1,16 @@
-import { Client } from 'pg';
+const { Client } = require('pg');
 
-export default async function handler(req, res) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
+exports.handler = async (event) => {
   try {
+    const client = new Client({ connectionString: process.env.DATABASE_URL });
     await client.connect();
 
     const resultado = await client.query(`
       SELECT 
-        ce.id,
-        ce.fase,
-        ce.partido_numero as numero,
-        e1.nombre as equipo1,
-        e2.nombre as equipo2,
-        eg.nombre as ganador,
-        ce.goles_1,
-        ce.goles_2,
-        ce.equipo_1_id,
-        ce.equipo_2_id,
-        ce.ganador_id
+        ce.id, ce.fase, ce.partido_numero as numero,
+        e1.nombre as equipo1, e2.nombre as equipo2,
+        eg.nombre as ganador, ce.goles_1, ce.goles_2,
+        ce.equipo_1_id, ce.equipo_2_id, ce.ganador_id
       FROM cuadro_eliminatorio ce
       LEFT JOIN equipos e1 ON ce.equipo_1_id = e1.id
       LEFT JOIN equipos e2 ON ce.equipo_2_id = e2.id
@@ -28,7 +18,6 @@ export default async function handler(req, res) {
       ORDER BY ce.fase, ce.partido_numero
     `);
 
-    // Agrupar por fase
     const cuadro = {};
     resultado.rows.forEach(partido => {
       if (!cuadro[partido.fase]) {
@@ -37,11 +26,19 @@ export default async function handler(req, res) {
       cuadro[partido.fase].push(partido);
     });
 
-    return res.status(200).json(cuadro);
+    await client.end();
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cuadro)
+    };
+
   } catch (error) {
     console.error('Error:', error);
-    return res.status(500).json({ error: error.message });
-  } finally {
-    await client.end();
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message })
+    };
   }
-}
+};
