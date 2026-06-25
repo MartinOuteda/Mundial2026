@@ -7,8 +7,12 @@ exports.handler = async (event) => {
 
   const { matchId, goles1, goles2 } = JSON.parse(event.body);
 
-  if (!matchId || goles1 === undefined || goles2 === undefined) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Faltan parámetros' }) };
+  const matchIdInt = parseInt(matchId);
+  const goles1Int = parseInt(goles1);
+  const goles2Int = parseInt(goles2);
+
+  if (!matchIdInt || goles1Int === undefined || goles2Int === undefined) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Faltan parámetros válidos' }) };
   }
 
   const client = new Client({
@@ -24,7 +28,7 @@ exports.handler = async (event) => {
       WHERE id = $1
     `;
 
-    const resMatch = await client.query(queryMatch, [matchId]);
+    const resMatch = await client.query(queryMatch, [matchIdInt]);
     if (resMatch.rows.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ error: 'Partido no encontrado' }) };
     }
@@ -33,9 +37,9 @@ exports.handler = async (event) => {
 
     // 2. Determinar ganador basado en goles
     let ganadorId = null;
-    if (goles1 > goles2) {
+    if (goles1Int > goles2Int) {
       ganadorId = match.equipo_1_id;
-    } else if (goles2 > goles1) {
+    } else if (goles2Int > goles1Int) {
       ganadorId = match.equipo_2_id;
     } else {
       // En caso de empate, por ahora no hay ganador definido
@@ -54,7 +58,7 @@ exports.handler = async (event) => {
       RETURNING *
     `;
 
-    const updateResult = await client.query(updateQuery, [goles1, goles2, ganadorId, matchId]);
+    const updateResult = await client.query(updateQuery, [goles1Int, goles2Int, ganadorId, matchIdInt]);
 
     return {
       statusCode: 200,
