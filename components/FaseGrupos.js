@@ -155,7 +155,7 @@ export default function FaseGrupos() {
                         </td>
                         <td className={styles.tdEquipo}>
                           <div className={styles.equipoCell}>
-                            <span className={styles.bandera}>{equipoData?.bandera}</span>
+                            <img src={equipoData?.bandera} alt={equipoData?.codigo} className={styles.banderaImg} />
                             <span className={styles.nombre}>{equipo.nombre}</span>
                           </div>
                         </td>
@@ -180,7 +180,7 @@ export default function FaseGrupos() {
                 return (
                   <div key={idx} className={styles.partido}>
                     <div className={styles.equipoIzq}>
-                      <span className={styles.flag}>{eq1?.bandera}</span>
+                      <img src={eq1?.bandera} alt={eq1?.codigo} className={styles.flagImg} />
                       <span className={styles.nombreEquipo}>{eq1?.codigo}</span>
                     </div>
 
@@ -208,7 +208,7 @@ export default function FaseGrupos() {
 
                     <div className={styles.equipoDer}>
                       <span className={styles.nombreEquipo}>{eq2?.codigo}</span>
-                      <span className={styles.flag}>{eq2?.bandera}</span>
+                      <img src={eq2?.bandera} alt={eq2?.codigo} className={styles.flagImg} />
                     </div>
                   </div>
                 );
