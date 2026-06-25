@@ -6,6 +6,8 @@ export default function CuadroEliminatorio() {
   const [cargando, setCargando] = useState(true);
   const [editandoId, setEditandoId] = useState(null);
   const [golesEditando, setGolesEditando] = useState({ g1: '', g2: '' });
+  const [editandoFechaId, setEditandoFechaId] = useState(null);
+  const [fechaEditando, setFechaEditando] = useState('');
 
   useEffect(() => {
     cargarCuadro();
@@ -56,15 +58,65 @@ export default function CuadroEliminatorio() {
     }
   };
 
+  const guardarFecha = async (matchId) => {
+    if (!fechaEditando.trim()) {
+      alert('Ingresa una fecha');
+      return;
+    }
+
+    try {
+      const res = await fetch('/.netlify/functions/guardar-fecha-hora', {
+        method: 'POST',
+        body: JSON.stringify({
+          matchId: parseInt(matchId),
+          fechaHora: fechaEditando
+        })
+      });
+
+      if (res.ok) {
+        setEditandoFechaId(null);
+        setFechaEditando('');
+        cargarCuadro();
+      } else {
+        alert('Error guardando fecha');
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
   const renderMatch = (match, isRO16 = false, idx = 0) => {
     const isEditing = editandoId === match.id;
+    const isEditingFecha = editandoFechaId === match.id;
 
     return (
       <div key={match.id} className={`${styles.matchCard} ${isRO16 ? styles[`color_${['azul', 'amarillo', 'naranja', 'amarillo', 'rojo', 'gris', 'rosa', 'verde'][idx]}`] : ''}`}>
         
         {/* FECHA */}
         <div className={styles.fechaDisplay}>
-          <span className={styles.fechaText}>{match.fecha_hora || '⏰ Agregar fecha'}</span>
+          {isEditingFecha ? (
+            <div className={styles.fechaEdit}>
+              <input
+                type="text"
+                value={fechaEditando}
+                onChange={(e) => setFechaEditando(e.target.value)}
+                placeholder="Ej: Dom, 28/4, 4:00 p.m."
+                className={styles.fechaInput}
+              />
+              <button className={styles.btnSave} onClick={() => guardarFecha(match.id)}>✓</button>
+              <button className={styles.btnCancel} onClick={() => setEditandoFechaId(null)}>✗</button>
+            </div>
+          ) : (
+            <span 
+              className={styles.fechaText}
+              onClick={() => {
+                setEditandoFechaId(match.id);
+                setFechaEditando(match.fecha_hora || '');
+              }}
+            >
+              {match.fecha_hora || '⏰ Agregar fecha'}
+            </span>
+          )}
         </div>
 
         {/* EQUIPOS */}
@@ -103,12 +155,12 @@ export default function CuadroEliminatorio() {
             <div className={styles.equipoRow}>
               {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
               <span className={styles.nombreEquipo}>{match.equipo_1 || 'A definir'}</span>
-              <span className={styles.goles}>{match.goles_1 !== null ? match.goles_1 : '-'}</span>
+              <span className={styles.goles}>{match.goles_1 === 0 ? '0' : (match.goles_1 || '-')}</span>
             </div>
             <div className={styles.equipoRow}>
               {match.bandera_2 && <img src={match.bandera_2} alt="" className={styles.flag} />}
               <span className={styles.nombreEquipo}>{match.equipo_2 || 'A definir'}</span>
-              <span className={styles.goles}>{match.goles_2 !== null ? match.goles_2 : '-'}</span>
+              <span className={styles.goles}>{match.goles_2 === 0 ? '0' : (match.goles_2 || '-')}</span>
             </div>
           </div>
         )}
