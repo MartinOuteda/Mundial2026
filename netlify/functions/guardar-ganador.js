@@ -49,7 +49,7 @@ exports.handler = async (event) => {
     // 3. Actualizar SOLO este partido con los goles y el ganador
     const updateQuery = `
       UPDATE cuadro_eliminatorio 
-      SET goles_1 = $1, goles_2 = $2, ganador_id = $3, updated_at = NOW()
+      SET goles_1 = $1, goles_2 = $2, ganador_id = $3
       WHERE id = $4
       RETURNING *
     `;
