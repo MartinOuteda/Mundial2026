@@ -39,6 +39,8 @@ export default function CuadroEliminatorio() {
 
   const guardarResultado = async (roundId, matchId) => {
     const goles = golesTemp[matchId];
+    console.log('Guardando resultado:', { roundId, matchId, goles });
+    
     try {
       const res = await fetch('/.netlify/functions/guardar-ganador', {
         method: 'POST',
@@ -48,6 +50,10 @@ export default function CuadroEliminatorio() {
           goles2: parseInt(goles.goles2)
         })
       });
+      
+      const data = await res.json();
+      console.log('Respuesta:', { status: res.status, data });
+      
       if (res.ok) {
         setEditando(null);
         setGolesTemp(prev => {
@@ -56,6 +62,8 @@ export default function CuadroEliminatorio() {
           return newState;
         });
         cargarCuadro();
+      } else {
+        console.error('Error en respuesta:', data.error);
       }
     } catch (error) {
       console.error('Error guardando resultado:', error);
