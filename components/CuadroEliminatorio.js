@@ -4,8 +4,8 @@ import styles from '@/styles/CuadroEliminatorio.module.css';
 export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [editando, setEditando] = useState(null);
-  const [editValues, setEditValues] = useState({});
+  const [editandoId, setEditandoId] = useState(null);
+  const [golesEditando, setGolesEditando] = useState({ g1: '', g2: '' });
 
   useEffect(() => {
     cargarCuadro();
@@ -15,188 +15,99 @@ export default function CuadroEliminatorio() {
     try {
       const res = await fetch('/.netlify/functions/obtener-cuadro');
       const response = await res.json();
-      
-      let data;
-      if (response.body) {
-        data = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
-      } else {
-        data = response;
-      }
-      
+      let data = response.body ? JSON.parse(response.body) : response;
       setCuadro(data);
     } catch (error) {
-      console.error('Error cargando cuadro:', error);
+      console.error('Error:', error);
     } finally {
       setCargando(false);
     }
   };
 
-  const iniciarEdicion = (matchId, tipo, valor) => {
-    setEditando({ matchId, tipo });
-    setEditValues(prev => ({ ...prev, [matchId]: valor }));
-  };
+  const guardar = async (matchId) => {
+    const g1 = golesEditando.g1.trim();
+    const g2 = golesEditando.g2.trim();
 
-  const guardarFecha = async (matchId) => {
-    try {
-      await fetch('/.netlify/functions/guardar-fecha-hora', {
-        method: 'POST',
-        body: JSON.stringify({
-          matchId,
-          fechaHora: editValues[matchId]
-        })
-      });
-      setEditando(null);
-      cargarCuadro();
-    } catch (error) {
-      console.error('Error guardando fecha:', error);
-    }
-  };
-
-  const guardarGoles = async (matchId) => {
-    const goles1 = parseInt(editValues[`${matchId}_goles1`]);
-    const goles2 = parseInt(editValues[`${matchId}_goles2`]);
-
-    if (isNaN(goles1) || isNaN(goles2)) {
-      alert('Ingresa números válidos');
+    if (!g1 || !g2) {
+      alert('Completa ambos campos');
       return;
     }
-
-    console.log('Guardando goles:', { matchId, goles1, goles2 });
 
     try {
       const res = await fetch('/.netlify/functions/guardar-ganador', {
         method: 'POST',
         body: JSON.stringify({
           matchId: parseInt(matchId),
-          goles1,
-          goles2
+          goles1: parseInt(g1),
+          goles2: parseInt(g2)
         })
       });
 
-      const data = await res.json();
-      console.log('Respuesta:', data);
-
       if (res.ok) {
-        setEditando(null);
-        cargarCuadro();
+        setEditandoId(null);
+        setGolesEditando({ g1: '', g2: '' });
+        setTimeout(() => cargarCuadro(), 500);
       } else {
-        alert('Error: ' + (data.error || 'No se pudo guardar'));
+        const err = await res.json();
+        alert('Error: ' + (err.error || 'No se pudo guardar'));
       }
     } catch (error) {
-      console.error('Error guardando goles:', error);
       alert('Error: ' + error.message);
     }
   };
 
-  // Obtener color del RO16 según índice
-  const colorRO16 = (idx) => {
-    const colors = [
-      'azul', 'naranja', 'amarillo', 'amarillo',
-      'azul', 'naranja', 'rojo', 'verde',
-      'purpura', 'rosa', 'gris', 'gris',
-      'purpura', 'rosa', 'rojo', 'verde'
-    ];
-    return colors[idx] || 'default';
-  };
-
-  const renderMatch = (match, isRO16 = false, ro16Index = 0) => {
-    const isEditingFecha = editando?.matchId === match.id && editando?.tipo === 'fecha';
-    const isEditingGoles = editando?.matchId === match.id && editando?.tipo === 'goles';
+  const renderMatch = (match, isRO16 = false, idx = 0) => {
+    const isEditing = editandoId === match.id;
 
     return (
-      <div 
-        key={match.id} 
-        className={`${styles.matchCard} ${isRO16 ? styles[`color_${colorRO16(ro16Index)}`] : ''}`}
-      >
-        {/* FECHA/HORA */}
-        <div className={styles.fechaSection}>
-          {isEditingFecha ? (
-            <div className={styles.fechaEdit}>
-              <input
-                type="text"
-                placeholder="Ej: Dom, 28/4, 4:00 p.m."
-                value={editValues[match.id] || ''}
-                onChange={(e) => setEditValues(prev => ({ ...prev, [match.id]: e.target.value }))}
-                className={styles.fechaInput}
-              />
-              <button className={styles.btnSave} onClick={() => guardarFecha(match.id)}>✓</button>
-              <button className={styles.btnCancel} onClick={() => setEditando(null)}>✗</button>
-            </div>
-          ) : (
-            <div 
-              className={styles.fechaDisplay}
-              onClick={() => iniciarEdicion(match.id, 'fecha', match.fecha_hora || '')}
-            >
-              {match.fecha_hora ? (
-                <span className={styles.fechaText}>{match.fecha_hora}</span>
-              ) : (
-                <span className={styles.fechaPlaceholder}>⏰ Agregar fecha</span>
-              )}
-            </div>
-          )}
+      <div key={match.id} className={`${styles.matchCard} ${isRO16 ? styles[`color_${['azul', 'amarillo', 'naranja', 'amarillo', 'rojo', 'gris', 'rosa', 'verde'][idx]}`] : ''}`}>
+        
+        {/* FECHA */}
+        <div className={styles.fechaDisplay}>
+          <span className={styles.fechaText}>{match.fecha_hora || '⏰ Agregar fecha'}</span>
         </div>
 
-        {/* EQUIPOS Y GOLES */}
-        {isEditingGoles ? (
+        {/* EQUIPOS */}
+        {isEditing ? (
           <div className={styles.golesEdit}>
             <div className={styles.equipoEdit}>
-              <span className={styles.nombreEquipo}>{match.equipo_1}</span>
+              <span>{match.equipo_1 || 'A definir'}</span>
               <input
                 type="number"
-                min="0"
-                max="10"
-                value={editValues[`${match.id}_goles1`] !== undefined ? editValues[`${match.id}_goles1`] : (match.goles_1 ?? 0)}
-                onChange={(e) => setEditValues(prev => ({ 
-                  ...prev, 
-                  [`${match.id}_goles1`]: e.target.value 
-                }))}
+                value={golesEditando.g1}
+                onChange={(e) => setGolesEditando({ ...golesEditando, g1: e.target.value })}
                 className={styles.golesInputEdit}
+                placeholder="0"
               />
             </div>
             <div className={styles.equipoEdit}>
-              <span className={styles.nombreEquipo}>{match.equipo_2}</span>
+              <span>{match.equipo_2 || 'A definir'}</span>
               <input
                 type="number"
-                min="0"
-                max="10"
-                value={editValues[`${match.id}_goles2`] !== undefined ? editValues[`${match.id}_goles2`] : (match.goles_2 ?? 0)}
-                onChange={(e) => setEditValues(prev => ({ 
-                  ...prev, 
-                  [`${match.id}_goles2`]: e.target.value 
-                }))}
+                value={golesEditando.g2}
+                onChange={(e) => setGolesEditando({ ...golesEditando, g2: e.target.value })}
                 className={styles.golesInputEdit}
+                placeholder="0"
               />
             </div>
             <div className={styles.acciones}>
-              <button className={styles.btnSave} onClick={() => guardarGoles(match.id)}>✓</button>
-              <button className={styles.btnCancel} onClick={() => setEditando(null)}>✗</button>
+              <button className={styles.btnSave} onClick={() => guardar(match.id)}>✓</button>
+              <button className={styles.btnCancel} onClick={() => setEditandoId(null)}>✗</button>
             </div>
           </div>
         ) : (
-          <div 
-            className={styles.equiposSection}
-            onClick={() => iniciarEdicion(match.id, 'goles', null)}
-          >
+          <div className={styles.equiposSection} onClick={() => {
+            setEditandoId(match.id);
+            setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
+          }}>
             <div className={styles.equipoRow}>
-              {match.equipo_1_id ? (
-                <>
-                  <img src={match.bandera_1} alt={match.equipo_1} className={styles.flag} onError={(e) => e.target.style.display = 'none'} />
-                  <span className={styles.nombreEquipo}>{match.equipo_1}</span>
-                </>
-              ) : (
-                <span className={styles.tbd}>A definir</span>
-              )}
+              {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
+              <span className={styles.nombreEquipo}>{match.equipo_1 || 'A definir'}</span>
               <span className={styles.goles}>{match.goles_1 !== null ? match.goles_1 : '-'}</span>
             </div>
             <div className={styles.equipoRow}>
-              {match.equipo_2_id ? (
-                <>
-                  <img src={match.bandera_2} alt={match.equipo_2} className={styles.flag} onError={(e) => e.target.style.display = 'none'} />
-                  <span className={styles.nombreEquipo}>{match.equipo_2}</span>
-                </>
-              ) : (
-                <span className={styles.tbd}>A definir</span>
-              )}
+              {match.bandera_2 && <img src={match.bandera_2} alt="" className={styles.flag} />}
+              <span className={styles.nombreEquipo}>{match.equipo_2 || 'A definir'}</span>
               <span className={styles.goles}>{match.goles_2 !== null ? match.goles_2 : '-'}</span>
             </div>
           </div>
@@ -205,9 +116,7 @@ export default function CuadroEliminatorio() {
     );
   };
 
-  if (cargando) {
-    return <div className={styles.cargando}>Cargando cuadro eliminatorio...</div>;
-  }
+  if (cargando) return <div className={styles.cargando}>Cargando...</div>;
 
   const ro32 = cuadro?.roundOf32 || [];
   const ro16 = cuadro?.roundOf16 || [];
@@ -215,23 +124,19 @@ export default function CuadroEliminatorio() {
   return (
     <div className={styles.containerFull}>
       <h1 className={styles.title}>CUADRO ELIMINATORIO</h1>
-      
       <div className={styles.bracket}>
-        {/* COLUMNA RO32 */}
         <div className={styles.column}>
           <h2 className={styles.columnTitle}>Eliminatoria de 32</h2>
           <div className={styles.matchesList}>
-            {ro32.map(match => renderMatch(match))}
+            {ro32.map(m => renderMatch(m))}
           </div>
         </div>
-
-        {/* COLUMNA RO16 */}
         <div className={styles.columnRO16}>
           <h2 className={styles.columnTitle}>Eliminatoria de 16</h2>
           <div className={styles.matchesListRO16}>
-            {ro16.map((match, idx) => (
-              <div key={match.id} className={idx % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}>
-                {idx % 2 === 0 && renderMatch(match, true, idx)}
+            {ro16.map((m, i) => (
+              <div key={m.id} className={i % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}>
+                {i % 2 === 0 && renderMatch(m, true, i)}
               </div>
             ))}
           </div>
