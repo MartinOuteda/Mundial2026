@@ -14,7 +14,16 @@ export default function CuadroEliminatorio() {
   const cargarCuadro = async () => {
     try {
       const res = await fetch('/.netlify/functions/obtener-cuadro');
-      const data = await res.json();
+      const response = await res.json();
+      
+      // obtener-cuadro retorna { statusCode, body }
+      let data;
+      if (response.body) {
+        data = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+      } else {
+        data = response;
+      }
+      
       setCuadro(data);
     } catch (error) {
       console.error('Error cargando cuadro:', error);
