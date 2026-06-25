@@ -179,29 +179,28 @@ exports.handler = async (event) => {
       const eq1Key = `${emp[0]}${emp[1]}`;
       const eq2Key = emp[2] === 'T' ? `T${emp[3]}` : `${emp[2]}${emp[3]}`;
       
-      // Usar el ID real de la BD (comenzan en 17)
       const realMatchId = 17 + idx;
       const existingMatch = matches.find(m => m.id === realMatchId);
       
-      // Calcular ganador si hay goles
-      let ganador_id = existingMatch?.ganador_id || null;
-      const g1 = existingMatch?.goles_1;
-      const g2 = existingMatch?.goles_2;
+      const baseMatch = buildMatch(realMatchId, eq1Key, eq2Key);
       
-      if (!ganador_id && g1 !== null && g1 !== undefined && g2 !== null && g2 !== undefined) {
-        if (g1 > g2) {
-          ganador_id = existingMatch.equipo_1_id;
-        } else if (g2 > g1) {
-          ganador_id = existingMatch.equipo_2_id;
+      // Calcular ganador basado en goles
+      let ganador_id = null;
+      if (existingMatch?.goles_1 !== null && existingMatch?.goles_1 !== undefined && 
+          existingMatch?.goles_2 !== null && existingMatch?.goles_2 !== undefined) {
+        if (existingMatch.goles_1 > existingMatch.goles_2) {
+          ganador_id = baseMatch.equipo_1_id;
+        } else if (existingMatch.goles_2 > existingMatch.goles_1) {
+          ganador_id = baseMatch.equipo_2_id;
         }
       }
       
       return {
-        ...buildMatch(realMatchId, eq1Key, eq2Key),
-        fecha_hora: existingMatch?.fecha_hora || null,
+        ...baseMatch,
         goles_1: existingMatch?.goles_1 || null,
         goles_2: existingMatch?.goles_2 || null,
-        ganador_id: ganador_id
+        ganador_id: ganador_id,
+        fecha_hora: existingMatch?.fecha_hora || null
       };
     });
 
