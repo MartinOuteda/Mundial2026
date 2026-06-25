@@ -59,9 +59,38 @@
 
 .roundGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
+
+/* Colores para los 16 partidos del Round of 32 */
+.match {
+  /* Default */
+}
+
+/* Fila 1 */
+.match:nth-child(1) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(2) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(3) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(4) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+/* Fila 2 */
+.match:nth-child(5) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(6) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(7) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(8) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+/* Fila 3 */
+.match:nth-child(9) { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(10) { background: linear-gradient(135deg, rgba(202, 138, 4, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(11) { background: linear-gradient(135deg, rgba(148, 163, 207, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(12) { background: linear-gradient(135deg, rgba(148, 163, 207, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+/* Fila 4 */
+.match:nth-child(13) { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(14) { background: linear-gradient(135deg, rgba(202, 138, 4, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(15) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.match:nth-child(16) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
 
 .match {
   display: flex;
@@ -74,6 +103,30 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+.match:nth-child(1),
+.match:nth-child(5) { border-left: 4px solid #4776B6; }
+
+.match:nth-child(2),
+.match:nth-child(6) { border-left: 4px solid #A855F7; }
+
+.match:nth-child(3),
+.match:nth-child(4) { border-left: 4px solid #EF4444; }
+
+.match:nth-child(7),
+.match:nth-child(15) { border-left: 4px solid #22C55E; }
+
+.match:nth-child(8),
+.match:nth-child(16) { border-left: 4px solid #FB923C; }
+
+.match:nth-child(9),
+.match:nth-child(13) { border-left: 4px solid #EC4899; }
+
+.match:nth-child(10),
+.match:nth-child(14) { border-left: 4px solid #CA8A04; }
+
+.match:nth-child(11),
+.match:nth-child(12) { border-left: 4px solid #94A3CF; }
 
 .match:hover {
   border-color: #d4af37;
