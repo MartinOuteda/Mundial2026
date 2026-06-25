@@ -1,372 +1,171 @@
 .container {
-  min-height: 100vh;
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
   background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
-  color: #fff;
-  padding: 40px 20px;
+  min-height: 100vh;
 }
 
-.header {
+.title {
   text-align: center;
+  color: #d4af37;
+  font-size: 2rem;
+  margin-bottom: 32px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.fase {
   margin-bottom: 40px;
 }
 
-.header h1 {
-  font-size: 2.5rem;
-  font-weight: 900;
-  margin: 0;
-  letter-spacing: 2px;
-  color: #fff;
-}
-
-.highlight {
-  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.bracketsVertical {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto 40px;
-  background: linear-gradient(135deg, rgba(42, 52, 81, 0.2) 0%, rgba(15, 20, 25, 0.2) 100%);
-  padding: 40px;
-  border-radius: 12px;
-}
-
-.roundSection {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  border-left: 4px solid #d4af37;
-}
-
-.roundTitle {
-  font-size: 0.85rem;
-  font-weight: 900;
-  text-transform: uppercase;
+.faseTitle {
   color: #d4af37;
-  margin: 0;
-  letter-spacing: 1px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  font-size: 1.2rem;
+  border-left: 4px solid #d4af37;
+  padding-left: 12px;
+  margin-bottom: 16px;
+  font-weight: bold;
 }
 
-.roundGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-}
-
-/* Colores para los 16 partidos del Round of 32 */
-.match {
-  /* Default */
-}
-
-/* Fila 1 */
-.match:nth-child(1) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(2) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(3) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(4) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-/* Fila 2 */
-.match:nth-child(5) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(6) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(7) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(8) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-/* Fila 3 */
-.match:nth-child(9) { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(10) { background: linear-gradient(135deg, rgba(202, 138, 4, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(11) { background: linear-gradient(135deg, rgba(148, 163, 207, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(12) { background: linear-gradient(135deg, rgba(148, 163, 207, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-/* Fila 4 */
-.match:nth-child(13) { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(14) { background: linear-gradient(135deg, rgba(202, 138, 4, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(15) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.match:nth-child(16) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-/* ROUND OF 16 - Mismo patrón de colores pero solo 8 partidos */
-.roundSection:nth-of-type(2) .match:nth-child(1),
-.roundSection:nth-of-type(2) .match:nth-child(5) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-.roundSection:nth-of-type(2) .match:nth-child(2),
-.roundSection:nth-of-type(2) .match:nth-child(6) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-.roundSection:nth-of-type(2) .match:nth-child(3) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.roundSection:nth-of-type(2) .match:nth-child(4) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-.roundSection:nth-of-type(2) .match:nth-child(7) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-.roundSection:nth-of-type(2) .match:nth-child(8) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
-
-.match {
+.matchesList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  border-radius: 6px;
-  overflow: hidden;
+  gap: 12px;
+}
+
+.matchCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 16px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.match:nth-child(1),
-.match:nth-child(5) { border-left: 4px solid #4776B6; }
-
-.match:nth-child(2),
-.match:nth-child(6) { border-left: 4px solid #A855F7; }
-
-.match:nth-child(3),
-.match:nth-child(4) { border-left: 4px solid #EF4444; }
-
-.match:nth-child(7),
-.match:nth-child(15) { border-left: 4px solid #22C55E; }
-
-.match:nth-child(8),
-.match:nth-child(16) { border-left: 4px solid #FB923C; }
-
-.match:nth-child(9),
-.match:nth-child(13) { border-left: 4px solid #EC4899; }
-
-.match:nth-child(10),
-.match:nth-child(14) { border-left: 4px solid #CA8A04; }
-
-.match:nth-child(11),
-.match:nth-child(12) { border-left: 4px solid #94A3CF; }
-
-/* ROUND OF 16 borders */
-.roundSection:nth-of-type(2) .match:nth-child(1),
-.roundSection:nth-of-type(2) .match:nth-child(5) { border-left: 4px solid #4776B6; }
-
-.roundSection:nth-of-type(2) .match:nth-child(2),
-.roundSection:nth-of-type(2) .match:nth-child(6) { border-left: 4px solid #A855F7; }
-
-.roundSection:nth-of-type(2) .match:nth-child(3) { border-left: 4px solid #EF4444; }
-.roundSection:nth-of-type(2) .match:nth-child(4) { border-left: 4px solid #EF4444; }
-
-.roundSection:nth-of-type(2) .match:nth-child(7) { border-left: 4px solid #22C55E; }
-.roundSection:nth-of-type(2) .match:nth-child(8) { border-left: 4px solid #FB923C; }
-
-.match:hover {
+.matchCard:hover {
   border-color: #d4af37;
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
-  transform: translateY(-2px);
+  background: rgba(212, 175, 55, 0.05);
 }
 
-.match.completed {
-  border-color: #22c55e;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(42, 52, 81, 0.2) 100%);
+/* FECHA/HORA */
+.fechaSection {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
-.team {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+.fechaDisplay {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.08);
   transition: all 0.2s ease;
 }
 
-.team:last-of-type {
-  border-bottom: none;
+.fechaDisplay:hover {
+  background: rgba(212, 175, 55, 0.15);
 }
 
-.team:hover {
-  background: rgba(212, 175, 55, 0.08);
+.fechaText {
+  color: #d4af37;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.team.winner {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(22, 163, 74, 0.2) 100%);
-  border-bottom-color: #22c55e;
+.fechaEdit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-.team.winner .teamCode,
-.team.winner .golDisplay {
-  color: #22c55e;
-  text-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+.fechaInput {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #d4af37;
+  border-radius: 6px;
+  color: #d4af37;
+  font-size: 0.9rem;
+  font-family: inherit;
 }
 
-.flag {
-  width: 28px;
+.fechaInput::placeholder {
+  color: rgba(212, 175, 55, 0.5);
+}
+
+.fechaInput:focus {
+  outline: none;
+  background: rgba(212, 175, 55, 0.15);
+}
+
+.btnSaveFecha,
+.btnCancelFecha {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btnSaveFecha {
+  background: #22c55e;
+  color: white;
+}
+
+.btnSaveFecha:hover {
+  background: #16a34a;
+}
+
+.btnCancelFecha {
+  background: #ef4444;
+  color: white;
+}
+
+.btnCancelFecha:hover {
+  background: #dc2626;
+}
+
+/* EQUIPOS */
+.equipoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.flagSmall {
+  width: 30px;
   height: 20px;
   object-fit: cover;
-  border-radius: 2px;
-  flex-shrink: 0;
+  border-radius: 3px;
 }
 
-.teamCode {
-  font-size: 0.75rem;
-  font-weight: 900;
+.nombreEquipo {
+  flex: 1;
+  font-weight: 500;
+}
+
+.goles {
+  font-size: 1.1rem;
+  font-weight: bold;
   color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-width: 50px;
+  min-width: 30px;
+  text-align: right;
 }
 
 .tbd {
-  color: #666;
-  font-weight: 700;
-  font-size: 0.8rem;
-  flex: 1;
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
-.golInput {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 50px;
-  margin-left: auto;
-}
-
-.inputGol {
-  width: 40px;
-  padding: 4px;
+.cargando {
+  text-align: center;
+  color: #d4af37;
+  padding: 40px;
   font-size: 1.1rem;
-  font-weight: 900;
-  text-align: center;
-  background: #0f1419;
-  border: 2px solid #d4af37;
-  color: #d4af37;
-  border-radius: 4px;
-  outline: none;
-}
-
-.inputGol:focus {
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.golDisplay {
-  font-size: 1.2rem;
-  font-weight: 900;
-  color: #d4af37;
-  min-width: 30px;
-  text-align: center;
-}
-
-.actions {
-  display: flex;
-  gap: 6px;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.3);
-  justify-content: center;
-}
-
-.btnEdit,
-.btnSave,
-.btnCancel {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s ease;
-  flex: 1;
-}
-
-.btnEdit {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  margin: 0 auto;
-}
-
-.btnEdit:hover:not(:disabled) {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.btnEdit:disabled {
-  background: #666;
-  color: #999;
-  cursor: not-allowed;
-}
-
-.btnSave {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: white;
-}
-
-.btnSave:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
-}
-
-.btnCancel {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-}
-
-.btnCancel:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
-
-.thirdPlace {
-  max-width: 600px;
-  margin: 40px auto;
-  text-align: center;
-}
-
-.thirdPlace h2 {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #d4af37;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-}
-
-.cargando,
-.error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  font-size: 1.5rem;
-  color: #d4af37;
-}
-
-.error {
-  color: #ef4444;
-}
-
-@media (max-width: 1024px) {
-  .roundGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .bracketsVertical {
-    padding: 20px;
-    gap: 30px;
-  }
-}
-
-@media (max-width: 768px) {
-  .roundGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 1.8rem;
-  }
-
-  .roundTitle {
-    font-size: 0.75rem;
-  }
-
-  .teamCode {
-    font-size: 0.65rem;
-  }
-
-  .golDisplay,
-  .inputGol {
-    font-size: 1rem;
-  }
 }

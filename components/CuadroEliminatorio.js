@@ -4,21 +4,18 @@ import styles from '@/styles/CuadroEliminatorio.module.css';
 export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [editando, setEditando] = useState(null);
-  const [golesTemp, setGolesTemp] = useState({}); // { matchId: { goles1, goles2 } }
+  const [editandoFecha, setEditandoFecha] = useState(null);
+  const [fechaTemp, setFechaTemp] = useState('');
 
   useEffect(() => {
     cargarCuadro();
   }, []);
 
   const cargarCuadro = async () => {
-    setCargando(true);
     try {
       const res = await fetch('/.netlify/functions/obtener-cuadro');
-      if (res.ok) {
-        const data = await res.json();
-        setCuadro(data);
-      }
+      const data = await res.json();
+      setCuadro(data);
     } catch (error) {
       console.error('Error cargando cuadro:', error);
     } finally {
@@ -26,138 +23,111 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const iniciarEdicion = (roundId, matchId, match) => {
-    setEditando({ roundId, matchId });
-    setGolesTemp(prev => ({
-      ...prev,
-      [matchId]: {
-        goles1: match.goles_1 ?? 0,
-        goles2: match.goles_2 ?? 0
-      }
-    }));
+  const iniciarEdicionFecha = (matchId, fechaActual) => {
+    setEditandoFecha(matchId);
+    setFechaTemp(fechaActual || '');
   };
 
-  const guardarResultado = async (roundId, matchId) => {
-    const goles = golesTemp[matchId];
-    console.log('Guardando resultado:', { roundId, matchId, goles });
-    
+  const guardarFecha = async (matchId) => {
     try {
-      const res = await fetch('/.netlify/functions/guardar-ganador', {
+      const res = await fetch('/.netlify/functions/guardar-fecha-hora', {
         method: 'POST',
         body: JSON.stringify({
           matchId,
-          goles1: parseInt(goles.goles1),
-          goles2: parseInt(goles.goles2)
+          fechaHora: fechaTemp
         })
       });
-      
-      const data = await res.json();
-      console.log('Respuesta:', { status: res.status, data });
-      
+
       if (res.ok) {
-        setEditando(null);
-        setGolesTemp(prev => {
-          const newState = { ...prev };
-          delete newState[matchId];
-          return newState;
-        });
+        setEditandoFecha(null);
         cargarCuadro();
-      } else {
-        console.error('Error en respuesta:', data.error);
       }
     } catch (error) {
-      console.error('Error guardando resultado:', error);
+      console.error('Error guardando fecha:', error);
     }
   };
 
-  const renderTeam = (team, matchId, isEditing, gol, onChange, isWinner = false) => {
-    const winnerStyle = isWinner ? {
-      background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.5) 0%, rgba(22, 163, 74, 0.3) 100%)',
-      borderBottom: '2px solid #22c55e',
-      boxShadow: '0 0 12px rgba(34, 197, 94, 0.3)'
-    } : {};
-
+  const renderPhase = (fase, matches) => {
     return (
-    <div className={styles.team} style={winnerStyle}>
-      {team?.id ? (
-        <>
-          <img 
-            src={team.bandera} 
-            alt={team.nombre}
-            className={styles.flag}
-            onError={(e) => {e.target.style.display = 'none'}}
-          />
-          <span className={styles.teamCode} style={isWinner ? { color: '#22c55e', textShadow: '0 0 8px rgba(34, 197, 94, 0.6)' } : {}}>{team.codigo}</span>
-        </>
-      ) : (
-        <span className={styles.tbd}>TBD</span>
-      )}
-      <div className={styles.golInput}>
-        {isEditing ? (
-          <input 
-            type="number" 
-            min="0" 
-            max="10"
-            value={gol}
-            onChange={onChange}
-            className={styles.inputGol}
-          />
-        ) : (
-          <span className={styles.golDisplay} style={isWinner ? { color: '#22c55e', textShadow: '0 0 8px rgba(34, 197, 94, 0.6)' } : {}}>{gol ?? '-'}</span>
-        )}
-      </div>
-    </div>
-    );
-  };
+      <div key={fase} className={styles.fase}>
+        <h3 className={styles.faseTitle}>{fase}</h3>
+        <div className={styles.matchesList}>
+          {matches.map(match => (
+            <div key={match.id} className={styles.matchCard}>
+              {/* FECHA/HORA */}
+              <div className={styles.fechaSection}>
+                {editandoFecha === match.id ? (
+                  <div className={styles.fechaEdit}>
+                    <input
+                      type="text"
+                      placeholder="Ej: Dom, 28/4, 4:00 p.m."
+                      value={fechaTemp}
+                      onChange={(e) => setFechaTemp(e.target.value)}
+                      className={styles.fechaInput}
+                    />
+                    <button
+                      className={styles.btnSaveFecha}
+                      onClick={() => guardarFecha(match.id)}
+                    >
+                      ✓
+                    </button>
+                    <button
+                      className={styles.btnCancelFecha}
+                      onClick={() => setEditandoFecha(null)}
+                    >
+                      ✗
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className={styles.fechaDisplay}
+                    onClick={() => iniciarEdicionFecha(match.id, match.fecha_hora)}
+                  >
+                    <span className={styles.fechaText}>
+                      {match.fecha_hora || '⏰ Agregar fecha'}
+                    </span>
+                  </div>
+                )}
+              </div>
 
-  const renderMatch = (match, roundId, matchId) => {
-    const isEditing = editando?.matchId === matchId && editando?.roundId === roundId;
-    const hasGanador = match.ganador_id !== null;
-    const currentGoles = golesTemp[matchId] || { goles1: 0, goles2: 0 };
-    
-    const eq1IsWinner = hasGanador && match.ganador_id === match.equipo_1_id;
-    const eq2IsWinner = hasGanador && match.ganador_id === match.equipo_2_id;
+              {/* EQUIPO 1 */}
+              <div className={styles.equipoRow}>
+                {match.equipo_1_id ? (
+                  <>
+                    <img
+                      src={match.bandera_1}
+                      alt={match.equipo_1}
+                      className={styles.flagSmall}
+                      onError={(e) => {e.target.style.display = 'none'}}
+                    />
+                    <span className={styles.nombreEquipo}>{match.equipo_1}</span>
+                  </>
+                ) : (
+                  <span className={styles.tbd}>A definir</span>
+                )}
+                <span className={styles.goles}>{match.goles_1 ?? '-'}</span>
+              </div>
 
-    return (
-      <div key={matchId} className={`${styles.match} ${hasGanador ? styles.completed : ''}`}>
-        {renderTeam(
-          { id: match.equipo_1_id, nombre: match.equipo_1, codigo: match.codigo_1, bandera: match.bandera_1 },
-          matchId,
-          isEditing,
-          isEditing ? currentGoles.goles1 : (match.goles_1 ?? '-'),
-          (e) => setGolesTemp(prev => ({
-            ...prev,
-            [matchId]: { ...(prev[matchId] || {}), goles1: e.target.value }
-          })),
-          eq1IsWinner
-        )}
-        
-        {isEditing ? (
-          <div className={styles.actions}>
-            <button className={styles.btnSave} onClick={() => guardarResultado(roundId, matchId)}>✓</button>
-            <button className={styles.btnCancel} onClick={() => setEditando(null)}>✗</button>
-          </div>
-        ) : (
-          <button 
-            className={styles.btnEdit}
-            onClick={() => iniciarEdicion(roundId, matchId, match)}
-            disabled={!match.equipo_1_id || !match.equipo_2_id}
-          >
-            {match.goles_1 !== null ? '✎' : '+'}
-          </button>
-        )}
-
-        {renderTeam(
-          { id: match.equipo_2_id, nombre: match.equipo_2, codigo: match.codigo_2, bandera: match.bandera_2 },
-          matchId,
-          isEditing,
-          isEditing ? currentGoles.goles2 : (match.goles_2 ?? '-'),
-          (e) => setGolesTemp(prev => ({
-            ...prev,
-            [matchId]: { ...(prev[matchId] || {}), goles2: e.target.value }
-          })),
-          eq2IsWinner
-        )}
+              {/* EQUIPO 2 */}
+              <div className={styles.equipoRow}>
+                {match.equipo_2_id ? (
+                  <>
+                    <img
+                      src={match.bandera_2}
+                      alt={match.equipo_2}
+                      className={styles.flagSmall}
+                      onError={(e) => {e.target.style.display = 'none'}}
+                    />
+                    <span className={styles.nombreEquipo}>{match.equipo_2}</span>
+                  </>
+                ) : (
+                  <span className={styles.tbd}>A definir</span>
+                )}
+                <span className={styles.goles}>{match.goles_2 ?? '-'}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -166,65 +136,15 @@ export default function CuadroEliminatorio() {
     return <div className={styles.cargando}>Cargando cuadro eliminatorio...</div>;
   }
 
-  if (!cuadro) {
-    return <div className={styles.error}>Error cargando datos</div>;
-  }
+  const ro32 = cuadro?.ro32 || [];
+  const ro16 = cuadro?.ro16 || [];
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>CUADRO <span className={styles.highlight}>ELIMINATORIO</span></h1>
-      </div>
-
-      <div className={styles.bracketsVertical}>
-        
-        {/* ROUND OF 32 */}
-        <div className={styles.roundSection}>
-          <h2 className={styles.roundTitle}>ROUND OF 32</h2>
-          <div className={styles.roundGrid}>
-            {cuadro.roundOf32?.map((match) => renderMatch(match, 'ro32', match.id))}
-          </div>
-        </div>
-
-        {/* ROUND OF 16 */}
-        <div className={styles.roundSection}>
-          <h2 className={styles.roundTitle}>ROUND OF 16</h2>
-          <div className={styles.roundGrid}>
-            {cuadro.roundOf16?.map((match) => renderMatch(match, 'ro16', match.id))}
-          </div>
-        </div>
-
-        {/* QUARTER FINALS */}
-        <div className={styles.roundSection}>
-          <h2 className={styles.roundTitle}>CUARTOS</h2>
-          <div className={styles.roundGrid}>
-            {cuadro.quarterfinals?.map((match) => renderMatch(match, 'qf', match.id))}
-          </div>
-        </div>
-
-        {/* SEMIFINALS */}
-        <div className={styles.roundSection}>
-          <h2 className={styles.roundTitle}>SEMIFINALES</h2>
-          <div className={styles.roundGrid}>
-            {cuadro.semifinals?.map((match) => renderMatch(match, 'sf', match.id))}
-          </div>
-        </div>
-
-        {/* FINAL */}
-        <div className={styles.roundSection}>
-          <h2 className={styles.roundTitle}>🏆 FINAL</h2>
-          <div className={styles.roundGrid}>
-            {cuadro.final && renderMatch(cuadro.final, 'final', cuadro.final.id)}
-          </div>
-        </div>
-
-      </div>
-
-      {/* TERCER LUGAR */}
-      <div className={styles.thirdPlace}>
-        <h2>🥉 TERCER LUGAR</h2>
-        {cuadro.thirdPlace && renderMatch(cuadro.thirdPlace, 'third', cuadro.thirdPlace.id)}
-      </div>
+      <h1 className={styles.title}>CUADRO ELIMINATORIO</h1>
+      
+      {renderPhase('Eliminatoria de 32', ro32)}
+      {renderPhase('Octavos de final', ro16)}
     </div>
   );
 }
