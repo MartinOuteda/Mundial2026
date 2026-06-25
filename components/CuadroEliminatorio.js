@@ -145,8 +145,8 @@ export default function CuadroEliminatorio() {
     return <div className={styles.cargando}>Cargando cuadro eliminatorio...</div>;
   }
 
-  const ro32 = cuadro?.ro32 || [];
-  const ro16 = cuadro?.ro16 || [];
+  const ro32 = cuadro?.roundOf32 || [];
+  const ro16 = cuadro?.roundOf16 || [];
 
   return (
     <div className={styles.container}>
