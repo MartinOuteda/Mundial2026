@@ -53,19 +53,38 @@ export default function CuadroEliminatorio() {
   };
 
   const guardarGoles = async (matchId) => {
+    const goles1 = parseInt(editValues[`${matchId}_goles1`]);
+    const goles2 = parseInt(editValues[`${matchId}_goles2`]);
+
+    if (isNaN(goles1) || isNaN(goles2)) {
+      alert('Ingresa números válidos');
+      return;
+    }
+
+    console.log('Guardando goles:', { matchId, goles1, goles2 });
+
     try {
-      await fetch('/.netlify/functions/guardar-ganador', {
+      const res = await fetch('/.netlify/functions/guardar-ganador', {
         method: 'POST',
         body: JSON.stringify({
-          matchId,
-          goles1: parseInt(editValues[`${matchId}_goles1`]),
-          goles2: parseInt(editValues[`${matchId}_goles2`])
+          matchId: parseInt(matchId),
+          goles1,
+          goles2
         })
       });
-      setEditando(null);
-      cargarCuadro();
+
+      const data = await res.json();
+      console.log('Respuesta:', data);
+
+      if (res.ok) {
+        setEditando(null);
+        cargarCuadro();
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo guardar'));
+      }
     } catch (error) {
       console.error('Error guardando goles:', error);
+      alert('Error: ' + error.message);
     }
   };
 
@@ -207,10 +226,14 @@ export default function CuadroEliminatorio() {
         </div>
 
         {/* COLUMNA RO16 */}
-        <div className={styles.column}>
-          <h2 className={styles.columnTitle}>Octavos de final</h2>
-          <div className={styles.matchesList}>
-            {ro16.map((match, idx) => renderMatch(match, true, idx))}
+        <div className={styles.columnRO16}>
+          <h2 className={styles.columnTitle}>Eliminatoria de 16</h2>
+          <div className={styles.matchesListRO16}>
+            {ro16.map((match, idx) => (
+              <div key={match.id} className={idx % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}>
+                {idx % 2 === 0 && renderMatch(match, true, idx)}
+              </div>
+            ))}
           </div>
         </div>
       </div>
