@@ -70,14 +70,14 @@
 
 
 /* Alineación vertical RO16 */
-.matchWrapper:nth-child(1) { margin-top: 40px; }
-.matchWrapper:nth-child(3) { margin-top: 40px; }
-.matchWrapper:nth-child(5) { margin-top: 40px; }
-.matchWrapper:nth-child(7) { margin-top: 40px; }
-.matchWrapper:nth-child(9) { margin-top: 40px; }
-.matchWrapper:nth-child(11) { margin-top: 40px; }
-.matchWrapper:nth-child(13) { margin-top: 40px; }
-.matchWrapper:nth-child(15) { margin-top: 40px; }
+.matchWrapper:nth-child(1) { margin-top: 65px; }
+.matchWrapper:nth-child(3) { margin-top: 65px; }
+.matchWrapper:nth-child(5) { margin-top: 65px; }
+.matchWrapper:nth-child(7) { margin-top: 65px; }
+.matchWrapper:nth-child(9) { margin-top: 65px; }
+.matchWrapper:nth-child(11) { margin-top: 65px; }
+.matchWrapper:nth-child(13) { margin-top: 65px; }
+.matchWrapper:nth-child(15) { margin-top: 65px; }
 
 .matchCard {
   background: rgba(255, 255, 255, 0.02);
