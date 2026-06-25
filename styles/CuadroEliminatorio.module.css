@@ -92,6 +92,19 @@
 .match:nth-child(15) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
 .match:nth-child(16) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
 
+/* ROUND OF 16 - Mismo patrón de colores pero solo 8 partidos */
+.roundSection:nth-of-type(2) .match:nth-child(1),
+.roundSection:nth-of-type(2) .match:nth-child(5) { background: linear-gradient(135deg, rgba(71, 118, 182, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+.roundSection:nth-of-type(2) .match:nth-child(2),
+.roundSection:nth-of-type(2) .match:nth-child(6) { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+.roundSection:nth-of-type(2) .match:nth-child(3) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.roundSection:nth-of-type(2) .match:nth-child(4) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
+.roundSection:nth-of-type(2) .match:nth-child(7) { background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+.roundSection:nth-of-type(2) .match:nth-child(8) { background: linear-gradient(135deg, rgba(251, 146, 60, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%); }
+
 .match {
   display: flex;
   flex-direction: column;
@@ -127,6 +140,19 @@
 
 .match:nth-child(11),
 .match:nth-child(12) { border-left: 4px solid #94A3CF; }
+
+/* ROUND OF 16 borders */
+.roundSection:nth-of-type(2) .match:nth-child(1),
+.roundSection:nth-of-type(2) .match:nth-child(5) { border-left: 4px solid #4776B6; }
+
+.roundSection:nth-of-type(2) .match:nth-child(2),
+.roundSection:nth-of-type(2) .match:nth-child(6) { border-left: 4px solid #A855F7; }
+
+.roundSection:nth-of-type(2) .match:nth-child(3) { border-left: 4px solid #EF4444; }
+.roundSection:nth-of-type(2) .match:nth-child(4) { border-left: 4px solid #EF4444; }
+
+.roundSection:nth-of-type(2) .match:nth-child(7) { border-left: 4px solid #22C55E; }
+.roundSection:nth-of-type(2) .match:nth-child(8) { border-left: 4px solid #FB923C; }
 
 .match:hover {
   border-color: #d4af37;
