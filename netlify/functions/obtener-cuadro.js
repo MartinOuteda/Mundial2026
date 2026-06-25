@@ -183,12 +183,22 @@ exports.handler = async (event) => {
       const realMatchId = 17 + idx;
       const existingMatch = matches.find(m => m.id === realMatchId);
       
+      // Calcular ganador si hay goles
+      let ganador_id = existingMatch?.ganador_id || null;
+      if (!ganador_id && existingMatch?.goles_1 !== null && existingMatch?.goles_2 !== null) {
+        if (existingMatch.goles_1 > existingMatch.goles_2) {
+          ganador_id = existingMatch.equipo_1_id;
+        } else if (existingMatch.goles_2 > existingMatch.goles_1) {
+          ganador_id = existingMatch.equipo_2_id;
+        }
+      }
+      
       return {
         ...buildMatch(realMatchId, eq1Key, eq2Key),
         fecha_hora: existingMatch?.fecha_hora || null,
         goles_1: existingMatch?.goles_1 || null,
         goles_2: existingMatch?.goles_2 || null,
-        ganador_id: existingMatch?.ganador_id || null
+        ganador_id: ganador_id
       };
     });
 
