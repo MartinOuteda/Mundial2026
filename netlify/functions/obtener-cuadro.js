@@ -185,10 +185,13 @@ exports.handler = async (event) => {
       
       // Calcular ganador si hay goles
       let ganador_id = existingMatch?.ganador_id || null;
-      if (!ganador_id && existingMatch?.goles_1 !== null && existingMatch?.goles_2 !== null) {
-        if (existingMatch.goles_1 > existingMatch.goles_2) {
+      const g1 = existingMatch?.goles_1;
+      const g2 = existingMatch?.goles_2;
+      
+      if (!ganador_id && g1 !== null && g1 !== undefined && g2 !== null && g2 !== undefined) {
+        if (g1 > g2) {
           ganador_id = existingMatch.equipo_1_id;
-        } else if (existingMatch.goles_2 > existingMatch.goles_1) {
+        } else if (g2 > g1) {
           ganador_id = existingMatch.equipo_2_id;
         }
       }

@@ -103,12 +103,12 @@ export default function CuadroEliminatorio() {
             <div className={styles.equipoRow}>
               {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
               <span className={styles.nombreEquipo}>{match.equipo_1 || 'A definir'}</span>
-              <span className={styles.goles}>{match.goles_1 === 0 ? '0' : (match.goles_1 || '-')}</span>
+              <span className={styles.goles}>{match.goles_1 !== null ? match.goles_1 : '-'}</span>
             </div>
             <div className={styles.equipoRow}>
               {match.bandera_2 && <img src={match.bandera_2} alt="" className={styles.flag} />}
               <span className={styles.nombreEquipo}>{match.equipo_2 || 'A definir'}</span>
-              <span className={styles.goles}>{match.goles_2 === 0 ? '0' : (match.goles_2 || '-')}</span>
+              <span className={styles.goles}>{match.goles_2 !== null ? match.goles_2 : '-'}</span>
             </div>
           </div>
         )}
