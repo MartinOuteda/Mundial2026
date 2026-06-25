@@ -70,8 +70,8 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const renderTeam = (team, matchId, isEditing, gol, onChange) => (
-    <div className={styles.team}>
+  const renderTeam = (team, matchId, isEditing, gol, onChange, isWinner = false) => (
+    <div className={`${styles.team} ${isWinner ? styles.winner : ''}`}>
       {team?.id ? (
         <>
           <img 
@@ -106,6 +106,9 @@ export default function CuadroEliminatorio() {
     const isEditing = editando?.matchId === matchId && editando?.roundId === roundId;
     const hasGanador = match.ganador_id !== null;
     const currentGoles = golesTemp[matchId] || { goles1: 0, goles2: 0 };
+    
+    const eq1IsWinner = hasGanador && match.ganador_id === match.equipo_1_id;
+    const eq2IsWinner = hasGanador && match.ganador_id === match.equipo_2_id;
 
     return (
       <div key={matchId} className={`${styles.match} ${hasGanador ? styles.completed : ''}`}>
@@ -117,7 +120,8 @@ export default function CuadroEliminatorio() {
           (e) => setGolesTemp(prev => ({
             ...prev,
             [matchId]: { ...(prev[matchId] || {}), goles1: e.target.value }
-          }))
+          })),
+          eq1IsWinner
         )}
         
         {isEditing ? (
@@ -143,7 +147,8 @@ export default function CuadroEliminatorio() {
           (e) => setGolesTemp(prev => ({
             ...prev,
             [matchId]: { ...(prev[matchId] || {}), goles2: e.target.value }
-          }))
+          })),
+          eq2IsWinner
         )}
       </div>
     );
