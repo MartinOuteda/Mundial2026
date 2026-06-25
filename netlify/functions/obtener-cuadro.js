@@ -181,8 +181,15 @@ exports.handler = async (event) => {
       
       // Usar el ID real de la BD (comenzan en 17)
       const realMatchId = 17 + idx;
+      const existingMatch = matches.find(m => m.id === realMatchId);
       
-      return buildMatch(realMatchId, eq1Key, eq2Key);
+      return {
+        ...buildMatch(realMatchId, eq1Key, eq2Key),
+        fecha_hora: existingMatch?.fecha_hora || null,
+        goles_1: existingMatch?.goles_1 || null,
+        goles_2: existingMatch?.goles_2 || null,
+        ganador_id: existingMatch?.ganador_id || null
+      };
     });
 
     // TODO: Construir Round of 16, QF, SF, Final basados en ganadores de Round of 32

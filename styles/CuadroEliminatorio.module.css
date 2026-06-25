@@ -1,7 +1,5 @@
 .container {
   padding: 24px;
-  max-width: 600px;
-  margin: 0 auto;
   background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
   min-height: 100vh;
 }
@@ -15,23 +13,45 @@
   letter-spacing: 2px;
 }
 
-.fase {
-  margin-bottom: 40px;
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.2);
 }
 
-.faseTitle {
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
   color: #d4af37;
-  font-size: 1.2rem;
-  border-left: 4px solid #d4af37;
-  padding-left: 12px;
-  margin-bottom: 16px;
-  font-weight: bold;
+}
+
+.tab.active {
+  color: #d4af37;
+  border-bottom-color: #d4af37;
+}
+
+/* CONTENIDO */
+.content {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .matchesList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .matchCard {
@@ -47,9 +67,9 @@
   background: rgba(212, 175, 55, 0.05);
 }
 
-/* FECHA/HORA */
+/* FECHA */
 .fechaSection {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
@@ -70,6 +90,12 @@
   color: #d4af37;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+.fechaPlaceholder {
+  color: rgba(212, 175, 55, 0.6);
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
 .fechaEdit {
@@ -98,46 +124,26 @@
   background: rgba(212, 175, 55, 0.15);
 }
 
-.btnSaveFecha,
-.btnCancelFecha {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.btnSaveFecha {
-  background: #22c55e;
-  color: white;
-}
-
-.btnSaveFecha:hover {
-  background: #16a34a;
-}
-
-.btnCancelFecha {
-  background: #ef4444;
-  color: white;
-}
-
-.btnCancelFecha:hover {
-  background: #dc2626;
-}
-
 /* EQUIPOS */
+.equiposSection {
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.equiposSection.completed {
+  opacity: 0.8;
+}
+
 .equipoRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
+  padding: 8px 0;
   color: #fff;
   font-size: 0.95rem;
 }
 
-.flagSmall {
+.flag {
   width: 30px;
   height: 20px;
   object-fit: cover;
@@ -161,6 +167,76 @@
   color: #9ca3af;
   font-style: italic;
   font-size: 0.9rem;
+}
+
+/* EDICIÓN DE GOLES */
+.golesEdit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.equipoEdit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 6px;
+}
+
+.golesInputEdit {
+  width: 50px;
+  padding: 6px 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.golesInputEdit:focus {
+  outline: none;
+  background: rgba(212, 175, 55, 0.2);
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* BOTONES */
+.btnSave,
+.btnCancel {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btnSave {
+  background: #22c55e;
+  color: white;
+}
+
+.btnSave:hover {
+  background: #16a34a;
+}
+
+.btnCancel {
+  background: #ef4444;
+  color: white;
+}
+
+.btnCancel:hover {
+  background: #dc2626;
 }
 
 .cargando {
