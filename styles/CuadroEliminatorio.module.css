@@ -57,7 +57,27 @@
 }
 
 .matchWrapperEmpty {
-  height: 100px;
+  height: 120px;
+}
+
+/* Alinear primer partido RO16 a mitad entre partido 1 y 2 RO32 */
+.matchWrapper:nth-child(1) {
+  margin-top: 66px;
+}
+
+/* Alinear tercero (entre partido 3 y 4) */
+.matchWrapper:nth-child(5) {
+  margin-top: 66px;
+}
+
+/* Alinear quinto (entre partido 5 y 6) */
+.matchWrapper:nth-child(9) {
+  margin-top: 66px;
+}
+
+/* Alinear séptimo (entre partido 7 y 8) */
+.matchWrapper:nth-child(13) {
+  margin-top: 66px;
 }
 
 .matchCard {

@@ -195,50 +195,70 @@ exports.handler = async (event) => {
     // TODO: Construir Round of 16, QF, SF, Final basados en ganadores de Round of 32
     const roundOf16 = [];
     
-    // Mapeo CORRECTO de RO16 con colores
-    const emparejamientosRO16 = [
-      [1, 5, 'azul'],       // (E1) vs (T1) - color 1
-      [2, 6, 'naranja'],    // (I1) vs (T2) - color 5
-      [3, 4, 'amarillo'],   // (A2) vs (B2) - color 7
-      [7, 15, 'amarillo'],  // (F1) vs (C2) - color 7
-      [1, 5, 'azul'],       // (K2) vs (L2) - color 1
-      [8, 16, 'naranja'],   // (H1) vs (J2) - color 5
-      [9, 13, 'rojo'],      // (D1) vs (T3) - color 3
-      [10, 14, 'verde'],    // (G1) vs (T4) - color 4
-      [3, 4, 'purpura'],    // (C1) vs (F2) - color 2
-      [9, 13, 'rosa'],      // (E2) vs (I2) - color 6
-      [11, 12, 'gris'],     // (A1) vs (T5) - color 8
-      [11, 12, 'gris'],     // (L1) vs (T6) - color 8
-      [10, 14, 'purpura'],  // (J1) vs (H2) - color 2
-      [2, 6, 'rosa'],       // (D2) vs (G2) - color 6
-      [7, 15, 'rojo'],      // (B1) vs (T7) - color 3
-      [8, 16, 'verde']      // (K1) vs (T8) - color 4
-    ];
-
-    // Construir Round of 16
-    emparejamientosRO16.forEach((pareja, idx) => {
-      const match1 = roundOf32.find(m => m.id === (17 + pareja[0] - 1));
-      const match2 = roundOf32.find(m => m.id === (17 + pareja[1] - 1));
+    // Construir Round of 16 DINÁMICAMENTE desde ganadores del RO32
+    // Agrupar RO32 en pares: (1,2), (3,4), (5,6), (7,8), (9,10), (11,12), (13,14), (15,16)
+    for (let i = 0; i < roundOf32.length; i += 2) {
+      const match1 = roundOf32[i];
+      const match2 = roundOf32[i + 1];
       
-      // IDs del RO16 van del 33 al 40 (8 partidos)
-      const realMatchId = 33 + idx;
-      const existingMatch = matches.find(m => m.id === realMatchId);
+      // ID del RO16: 33-40
+      const ro16Id = 33 + (i / 2);
+      const existingMatch = matches.find(m => m.id === ro16Id);
+      
+      // Obtener ganadores (si no hay, será null = "A definir")
+      const ganador1Id = match1?.ganador_id || null;
+      const ganador2Id = match2?.ganador_id || null;
+      
+      // Buscar datos del ganador 1
+      let eq1Id = null, eq1Nombre = null, eq1Codigo = null, eq1Bandera = null;
+      if (ganador1Id) {
+        if (ganador1Id === match1?.equipo_1_id) {
+          eq1Id = match1?.equipo_1_id;
+          eq1Nombre = match1?.equipo_1;
+          eq1Codigo = match1?.codigo_1;
+          eq1Bandera = match1?.bandera_1;
+        } else {
+          eq1Id = match1?.equipo_2_id;
+          eq1Nombre = match1?.equipo_2;
+          eq1Codigo = match1?.codigo_2;
+          eq1Bandera = match1?.bandera_2;
+        }
+      }
+      
+      // Buscar datos del ganador 2
+      let eq2Id = null, eq2Nombre = null, eq2Codigo = null, eq2Bandera = null;
+      if (ganador2Id) {
+        if (ganador2Id === match2?.equipo_1_id) {
+          eq2Id = match2?.equipo_1_id;
+          eq2Nombre = match2?.equipo_1;
+          eq2Codigo = match2?.codigo_1;
+          eq2Bandera = match2?.bandera_1;
+        } else {
+          eq2Id = match2?.equipo_2_id;
+          eq2Nombre = match2?.equipo_2;
+          eq2Codigo = match2?.codigo_2;
+          eq2Bandera = match2?.bandera_2;
+        }
+      }
       
       roundOf16.push({
-        id: realMatchId,
-        equipo_1_id: match1?.ganador_id || null,
-        equipo_1: match1?.ganador_id === match1?.equipo_1_id ? match1?.equipo_1 : match1?.equipo_2,
-        codigo_1: match1?.ganador_id === match1?.equipo_1_id ? match1?.codigo_1 : match1?.codigo_2,
-        bandera_1: match1?.ganador_id === match1?.equipo_1_id ? match1?.bandera_1 : match1?.bandera_2,
-        equipo_2_id: match2?.ganador_id || null,
-        equipo_2: match2?.ganador_id === match2?.equipo_1_id ? match2?.equipo_1 : match2?.equipo_2,
-        codigo_2: match2?.ganador_id === match2?.equipo_1_id ? match2?.codigo_1 : match2?.codigo_2,
-        bandera_2: match2?.ganador_id === match2?.equipo_1_id ? match2?.bandera_1 : match2?.bandera_2,
-        goles_1: existingMatch?.goles_1 ?? null,
-        goles_2: existingMatch?.goles_2 ?? null,
-        ganador_id: existingMatch?.ganador_id ?? null
+        id: ro16Id,
+        fase: 'RO16',
+        partido_numero: (i / 2) + 1,
+        equipo_1_id: eq1Id,
+        equipo_1: eq1Nombre,
+        codigo_1: eq1Codigo,
+        bandera_1: eq1Bandera,
+        equipo_2_id: eq2Id,
+        equipo_2: eq2Nombre,
+        codigo_2: eq2Codigo,
+        bandera_2: eq2Bandera,
+        goles_1: existingMatch?.goles_1 || null,
+        goles_2: existingMatch?.goles_2 || null,
+        ganador_id: existingMatch?.ganador_id || null,
+        fecha_hora: existingMatch?.fecha_hora || null
       });
-    });
+    }
 
     const quarterfinals = [];
     const semifinals = [];
