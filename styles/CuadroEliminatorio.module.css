@@ -8,7 +8,7 @@
   text-align: center;
   color: #d4af37;
   font-size: 2rem;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   font-weight: bold;
   letter-spacing: 2px;
 }
@@ -16,40 +16,29 @@
 .bracket {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  max-width: 1400px;
+  gap: 24px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-.columnRO16 {
+.column, .columnRO16 {
   display: flex;
   flex-direction: column;
 }
 
 .columnTitle {
   color: #d4af37;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   border-left: 4px solid #d4af37;
   padding-left: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   font-weight: bold;
 }
 
-.matchesList {
+.matchesList, .matchesListRO16 {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.matchesListRO16 {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .matchWrapper {
@@ -57,34 +46,20 @@
 }
 
 .matchWrapperEmpty {
-  height: 120px;
+  height: 100px;
 }
 
-/* Alinear primer partido RO16 a mitad entre partido 1 y 2 RO32 */
-.matchWrapper:nth-child(1) {
-  margin-top: 66px;
-}
-
-/* Alinear tercero (entre partido 3 y 4) */
-.matchWrapper:nth-child(5) {
-  margin-top: 66px;
-}
-
-/* Alinear quinto (entre partido 5 y 6) */
-.matchWrapper:nth-child(9) {
-  margin-top: 66px;
-}
-
-/* Alinear séptimo (entre partido 7 y 8) */
-.matchWrapper:nth-child(13) {
-  margin-top: 66px;
-}
+/* Alineación vertical RO16 */
+.matchWrapper:nth-child(1) { margin-top: 56px; }
+.matchWrapper:nth-child(5) { margin-top: 56px; }
+.matchWrapper:nth-child(9) { margin-top: 56px; }
+.matchWrapper:nth-child(13) { margin-top: 56px; }
 
 .matchCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 8px;
-  padding: 14px;
+  border-radius: 6px;
+  padding: 10px;
   transition: all 0.3s ease;
 }
 
@@ -94,80 +69,49 @@
 }
 
 /* COLORES RO16 */
-.matchCard.color_azul {
-  border-left: 4px solid #4776B6;
-}
-
-.matchCard.color_naranja {
-  border-left: 4px solid #FB923C;
-}
-
-.matchCard.color_amarillo {
-  border-left: 4px solid #CA8A04;
-}
-
-.matchCard.color_rojo {
-  border-left: 4px solid #EF4444;
-}
-
-.matchCard.color_verde {
-  border-left: 4px solid #22C55E;
-}
-
-.matchCard.color_purpura {
-  border-left: 4px solid #A855F7;
-}
-
-.matchCard.color_rosa {
-  border-left: 4px solid #EC4899;
-}
-
-.matchCard.color_gris {
-  border-left: 4px solid #94A3CF;
-}
+.matchCard.color_azul { border-left: 4px solid #4776B6; }
+.matchCard.color_naranja { border-left: 4px solid #FB923C; }
+.matchCard.color_amarillo { border-left: 4px solid #CA8A04; }
+.matchCard.color_rojo { border-left: 4px solid #EF4444; }
+.matchCard.color_verde { border-left: 4px solid #22C55E; }
+.matchCard.color_purpura { border-left: 4px solid #A855F7; }
+.matchCard.color_rosa { border-left: 4px solid #EC4899; }
+.matchCard.color_gris { border-left: 4px solid #94A3CF; }
 
 /* FECHA */
-.fechaSection {
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-}
-
 .fechaDisplay {
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
-  background: rgba(212, 175, 55, 0.08);
-  transition: all 0.2s ease;
-  font-size: 0.85rem;
-}
-
-.fechaDisplay:hover {
-  background: rgba(212, 175, 55, 0.15);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .fechaText {
   color: #d4af37;
+  font-size: 0.85rem;
   font-weight: 500;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
+  display: inline-block;
+  transition: all 0.2s ease;
 }
 
-.fechaPlaceholder {
-  color: rgba(212, 175, 55, 0.6);
-  font-style: italic;
+.fechaText:hover {
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .fechaEdit {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
 }
 
 .fechaInput {
   flex: 1;
-  padding: 6px 10px;
+  padding: 5px 8px;
   background: rgba(212, 175, 55, 0.1);
   border: 1px solid #d4af37;
-  border-radius: 4px;
+  border-radius: 3px;
   color: #d4af37;
   font-size: 0.8rem;
   font-family: inherit;
@@ -185,21 +129,21 @@
 /* EQUIPOS */
 .equiposSection {
   cursor: pointer;
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .equipoRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 0;
+  gap: 8px;
+  padding: 5px 0;
   color: #fff;
   font-size: 0.9rem;
 }
 
 .flag {
-  width: 26px;
-  height: 18px;
+  width: 22px;
+  height: 15px;
   object-fit: cover;
   border-radius: 2px;
   flex-shrink: 0;
@@ -211,13 +155,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .goles {
   font-size: 1rem;
   font-weight: bold;
   color: #d4af37;
-  min-width: 25px;
+  min-width: 24px;
   text-align: right;
 }
 
@@ -237,10 +182,11 @@
 .equipoEdit {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 6px;
   background: rgba(212, 175, 55, 0.08);
   border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .golesInputEdit {
@@ -268,8 +214,7 @@
 }
 
 /* BOTONES */
-.btnSave,
-.btnCancel {
+.btnSave, .btnCancel {
   padding: 6px 10px;
   border: none;
   border-radius: 4px;
@@ -308,6 +253,5 @@
 @media (max-width: 1024px) {
   .bracket {
     grid-template-columns: 1fr;
-    gap: 24px;
   }
 }
