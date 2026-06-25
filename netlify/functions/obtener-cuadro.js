@@ -188,13 +188,25 @@ exports.handler = async (event) => {
     // TODO: Construir Round of 16, QF, SF, Final basados en ganadores de Round of 32
     const roundOf16 = [];
     
+    // Mapeo de qué partidos del RO32 generan qué partidos del RO16
+    const emparejamientosRO16 = [
+      [1, 5],      // Ganador(1) vs Ganador(5)
+      [2, 6],      // Ganador(2) vs Ganador(6)
+      [3, 4],      // Ganador(3) vs Ganador(4)
+      [7, 15],     // Ganador(7) vs Ganador(15)
+      [8, 16],     // Ganador(8) vs Ganador(16)
+      [9, 13],     // Ganador(9) vs Ganador(13)
+      [10, 14],    // Ganador(10) vs Ganador(14)
+      [11, 12]     // Ganador(11) vs Ganador(12)
+    ];
+
     // Construir Round of 16
     emparejamientosRO16.forEach((pareja, idx) => {
       const match1 = roundOf32.find(m => m.id === (17 + pareja[0] - 1));
       const match2 = roundOf32.find(m => m.id === (17 + pareja[1] - 1));
       
-      // IDs del RO16 van del 25 al 32 (8 partidos)
-      const realMatchId = 25 + idx;
+      // IDs del RO16 van del 33 al 40 (8 partidos)
+      const realMatchId = 33 + idx;
       const existingMatch = matches.find(m => m.id === realMatchId);
       
       roundOf16.push({
