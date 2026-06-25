@@ -70,8 +70,15 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const renderTeam = (team, matchId, isEditing, gol, onChange, isWinner = false) => (
-    <div className={`${styles.team} ${isWinner ? styles.winner : ''}`}>
+  const renderTeam = (team, matchId, isEditing, gol, onChange, isWinner = false) => {
+    const winnerStyle = isWinner ? {
+      background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.5) 0%, rgba(22, 163, 74, 0.3) 100%)',
+      borderBottom: '2px solid #22c55e',
+      boxShadow: '0 0 12px rgba(34, 197, 94, 0.3)'
+    } : {};
+
+    return (
+    <div className={styles.team} style={winnerStyle}>
       {team?.id ? (
         <>
           <img 
@@ -80,7 +87,7 @@ export default function CuadroEliminatorio() {
             className={styles.flag}
             onError={(e) => {e.target.style.display = 'none'}}
           />
-          <span className={styles.teamCode}>{team.codigo}</span>
+          <span className={styles.teamCode} style={isWinner ? { color: '#22c55e', textShadow: '0 0 8px rgba(34, 197, 94, 0.6)' } : {}}>{team.codigo}</span>
         </>
       ) : (
         <span className={styles.tbd}>TBD</span>
@@ -96,11 +103,12 @@ export default function CuadroEliminatorio() {
             className={styles.inputGol}
           />
         ) : (
-          <span className={styles.golDisplay}>{gol ?? '-'}</span>
+          <span className={styles.golDisplay} style={isWinner ? { color: '#22c55e', textShadow: '0 0 8px rgba(34, 197, 94, 0.6)' } : {}}>{gol ?? '-'}</span>
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   const renderMatch = (match, roundId, matchId) => {
     const isEditing = editando?.matchId === matchId && editando?.roundId === roundId;
