@@ -29,6 +29,8 @@ exports.handler = async (event) => {
     `;
 
     const resMatch = await client.query(queryMatch, [matchIdInt]);
+    console.log('Partido encontrado:', resMatch.rows[0]);
+    
     if (resMatch.rows.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ error: 'Partido no encontrado' }) };
     }
@@ -37,13 +39,16 @@ exports.handler = async (event) => {
 
     // 2. Determinar ganador basado en goles
     let ganadorId = null;
+    console.log(`Comparando: ${goles1Int} > ${goles2Int} ?`);
+    
     if (goles1Int > goles2Int) {
       ganadorId = match.equipo_1_id;
+      console.log(`Ganador: Equipo 1 (ID: ${ganadorId})`);
     } else if (goles2Int > goles1Int) {
       ganadorId = match.equipo_2_id;
+      console.log(`Ganador: Equipo 2 (ID: ${ganadorId})`);
     } else {
-      // En caso de empate, por ahora no hay ganador definido
-      // (En partidos de eliminación real hay penales, pero eso es opcional)
+      console.log('Empate detectado');
       return { 
         statusCode: 400, 
         body: JSON.stringify({ error: 'Debe haber ganador (no puede ser empate)' }) 
@@ -58,7 +63,9 @@ exports.handler = async (event) => {
       RETURNING *
     `;
 
+    console.log(`Guardando: goles_1=${goles1Int}, goles_2=${goles2Int}, ganador_id=${ganadorId}, match_id=${matchIdInt}`);
     const updateResult = await client.query(updateQuery, [goles1Int, goles2Int, ganadorId, matchIdInt]);
+    console.log('Resultado de UPDATE:', updateResult.rows[0]);
 
     return {
       statusCode: 200,
@@ -69,7 +76,7 @@ exports.handler = async (event) => {
       })
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error completo:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
