@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styles from '@/styles/CuadroEliminatorio_v2.module.css';
+import styles from '@/styles/CuadroEliminatorio.module.css';
 
 export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
