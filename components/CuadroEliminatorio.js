@@ -5,7 +5,7 @@ export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [editando, setEditando] = useState(null);
-  const [golesTemp, setGolesTemp] = useState({ goles1: 0, goles2: 0 });
+  const [golesTemp, setGolesTemp] = useState({}); // { matchId: { goles1, goles2 } }
 
   useEffect(() => {
     cargarCuadro();
@@ -28,24 +28,33 @@ export default function CuadroEliminatorio() {
 
   const iniciarEdicion = (roundId, matchId, match) => {
     setEditando({ roundId, matchId });
-    setGolesTemp({
-      goles1: match.goles_1 ?? 0,
-      goles2: match.goles_2 ?? 0
-    });
+    setGolesTemp(prev => ({
+      ...prev,
+      [matchId]: {
+        goles1: match.goles_1 ?? 0,
+        goles2: match.goles_2 ?? 0
+      }
+    }));
   };
 
   const guardarResultado = async (roundId, matchId) => {
+    const goles = golesTemp[matchId];
     try {
       const res = await fetch('/.netlify/functions/guardar-ganador', {
         method: 'POST',
         body: JSON.stringify({
           matchId,
-          goles1: parseInt(golesTemp.goles1),
-          goles2: parseInt(golesTemp.goles2)
+          goles1: parseInt(goles.goles1),
+          goles2: parseInt(goles.goles2)
         })
       });
       if (res.ok) {
         setEditando(null);
+        setGolesTemp(prev => {
+          const newState = { ...prev };
+          delete newState[matchId];
+          return newState;
+        });
         cargarCuadro();
       }
     } catch (error) {
@@ -53,7 +62,7 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const renderTeam = (team, isEditing, gol, onChange) => (
+  const renderTeam = (team, matchId, isEditing, gol, onChange) => (
     <div className={styles.team}>
       {team?.id ? (
         <>
@@ -88,14 +97,19 @@ export default function CuadroEliminatorio() {
   const renderMatch = (match, roundId, matchId) => {
     const isEditing = editando?.matchId === matchId && editando?.roundId === roundId;
     const hasGanador = match.ganador_id !== null;
+    const currentGoles = golesTemp[matchId] || { goles1: 0, goles2: 0 };
 
     return (
       <div key={matchId} className={`${styles.match} ${hasGanador ? styles.completed : ''}`}>
         {renderTeam(
           { id: match.equipo_1_id, nombre: match.equipo_1, codigo: match.codigo_1, bandera: match.bandera_1 },
+          matchId,
           isEditing,
-          golesTemp.goles1,
-          (e) => setGolesTemp({...golesTemp, goles1: e.target.value})
+          isEditing ? currentGoles.goles1 : (match.goles_1 ?? '-'),
+          (e) => setGolesTemp(prev => ({
+            ...prev,
+            [matchId]: { ...(prev[matchId] || {}), goles1: e.target.value }
+          }))
         )}
         
         {isEditing ? (
@@ -115,9 +129,13 @@ export default function CuadroEliminatorio() {
 
         {renderTeam(
           { id: match.equipo_2_id, nombre: match.equipo_2, codigo: match.codigo_2, bandera: match.bandera_2 },
+          matchId,
           isEditing,
-          golesTemp.goles2,
-          (e) => setGolesTemp({...golesTemp, goles2: e.target.value})
+          isEditing ? currentGoles.goles2 : (match.goles_2 ?? '-'),
+          (e) => setGolesTemp(prev => ({
+            ...prev,
+            [matchId]: { ...(prev[matchId] || {}), goles2: e.target.value }
+          }))
         )}
       </div>
     );
