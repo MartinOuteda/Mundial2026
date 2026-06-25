@@ -189,7 +189,7 @@ export default function FaseGrupos() {
                         type="number"
                         min="0"
                         max="99"
-                        value={resultados[grupo]?.[idx]?.goles1 || ''}
+                        value={resultados[grupo]?.[idx]?.goles1 ?? ''}
                         onChange={(e) => handleGolesChange(grupo, idx, '1', e.target.value)}
                         className={styles.input}
                         placeholder="-"
@@ -199,7 +199,7 @@ export default function FaseGrupos() {
                         type="number"
                         min="0"
                         max="99"
-                        value={resultados[grupo]?.[idx]?.goles2 || ''}
+                        value={resultados[grupo]?.[idx]?.goles2 ?? ''}
                         onChange={(e) => handleGolesChange(grupo, idx, '2', e.target.value)}
                         className={styles.input}
                         placeholder="-"
