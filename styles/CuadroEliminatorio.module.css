@@ -31,74 +31,93 @@
   margin-top: 10px;
 }
 
-.bracketsContainer {
+.bracketsWrapper {
   display: flex;
   gap: 30px;
   overflow-x: auto;
-  padding: 20px;
+  padding: 40px 20px;
   background: linear-gradient(135deg, rgba(42, 52, 81, 0.3) 0%, rgba(15, 20, 25, 0.3) 100%);
   border-radius: 12px;
   margin-bottom: 40px;
-  flex-wrap: wrap;
   justify-content: center;
+  min-height: 600px;
 }
 
 .round {
-  flex: 0 0 auto;
-  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 300px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.roundTitle {
-  font-size: 0.85rem;
+.roundLabel {
+  font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
   color: #d4af37;
-  margin: 0 0 20px 0;
   letter-spacing: 1px;
+  padding: 0 20px;
+  border-bottom: 2px solid #d4af37;
+  width: 100%;
   text-align: center;
   padding-bottom: 10px;
-  border-bottom: 2px solid #d4af37;
 }
 
-.matches {
+.matchesColumn {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 40px;
+  justify-content: center;
+  flex: 1;
 }
 
-.match {
+.matchBox {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
   background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
-  border: 2px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  padding: 12px;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
   transition: all 0.3s ease;
-  position: relative;
+  min-width: 240px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-.match:hover {
+.matchBox:hover {
   border-color: #d4af37;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+  transform: translateY(-2px);
 }
 
-.matchCompleted {
+.matchBox.completed {
   border-color: #22c55e;
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(42, 52, 81, 0.2) 100%);
 }
 
-.equipo {
+.teamRow {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  gap: 10px;
+}
+
+.teamRow:last-of-type {
+  border-bottom: none;
+}
+
+.teamInfo {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  min-height: 40px;
+  flex: 1;
+  min-width: 0;
 }
 
-.bandera {
+.flag {
   width: 28px;
   height: 20px;
   object-fit: cover;
@@ -106,24 +125,24 @@
   flex-shrink: 0;
 }
 
-.equipoInfo {
+.teamData {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  flex-grow: 1;
   min-width: 0;
+  flex: 1;
 }
 
-.codigo {
-  font-size: 0.7rem;
+.code {
+  font-size: 0.65rem;
   font-weight: 900;
   color: #d4af37;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.nombre {
-  font-size: 0.85rem;
+.name {
+  font-size: 0.8rem;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
@@ -131,38 +150,30 @@
   text-overflow: ellipsis;
 }
 
-.vacio {
+.tbd {
   color: #666;
   font-weight: 700;
-  font-size: 0.85rem;
-  flex-grow: 1;
-  text-align: center;
+  font-size: 0.8rem;
+  flex: 1;
 }
 
-.goles {
+.score {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  min-width: 50px;
+  padding: 0 8px;
 }
 
-.gol {
+.scoreNum {
   font-size: 1.4rem;
   font-weight: 900;
   color: #d4af37;
-  min-width: 30px;
+  min-width: 40px;
   text-align: center;
 }
 
-.separador {
-  color: #a0a8c0;
-  font-weight: 700;
-}
-
-.inputGol {
+.inputScore {
   width: 40px;
   padding: 6px;
   font-size: 1.2rem;
@@ -175,90 +186,78 @@
   outline: none;
 }
 
-.inputGol:focus {
+.inputScore:focus {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
-.acciones {
+.actions {
   display: flex;
   gap: 6px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
   justify-content: center;
 }
 
-.btnEditar,
-.btnGuardar,
-.btnCancelar {
+.btnEdit,
+.btnSave,
+.btnCancel {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
   font-weight: 700;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
+  flex: 1;
 }
 
-.btnEditar {
+.btnEdit {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  flex-grow: 1;
 }
 
-.btnEditar:hover:not(:disabled) {
+.btnEdit:hover:not(:disabled) {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
-.btnEditar:disabled {
+.btnEdit:disabled {
   background: #666;
   color: #999;
   cursor: not-allowed;
 }
 
-.btnGuardar {
+.btnSave {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   color: white;
-  flex: 1;
 }
 
-.btnGuardar:hover {
-  transform: scale(1.1);
+.btnSave:hover {
+  transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
 }
 
-.btnCancelar {
+.btnCancel {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
-  flex: 1;
 }
 
-.btnCancelar:hover {
-  transform: scale(1.1);
+.btnCancel:hover {
+  transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
-.finalMatch {
-  display: flex;
-  justify-content: center;
-}
-
-.finalMatch .match {
-  min-width: 350px;
-  border: 3px solid #d4af37;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(42, 52, 81, 0.3) 100%);
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-}
-
-.thirdPlaceSection {
-  max-width: 800px;
+.thirdPlace {
+  max-width: 600px;
   margin: 40px auto;
   text-align: center;
 }
 
-.thirdPlaceSection h2 {
-  font-size: 1.8rem;
+.thirdPlace h2 {
+  font-size: 2rem;
   font-weight: 900;
   color: #d4af37;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   letter-spacing: 1px;
 }
 
@@ -267,8 +266,10 @@
   justify-content: center;
 }
 
-.thirdPlaceMatch .match {
+.thirdPlaceMatch .matchBox {
   min-width: 350px;
+  border: 3px solid #d4af37;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
 }
 
 .cargando,
@@ -285,48 +286,53 @@
   color: #ef4444;
 }
 
-@media (max-width: 1200px) {
-  .bracketsContainer {
-    flex-wrap: wrap;
+@media (max-width: 1400px) {
+  .bracketsWrapper {
+    gap: 20px;
+    padding: 20px 10px;
   }
 
   .round {
-    min-width: 250px;
+    min-width: 280px;
   }
 
-  .header h1 {
-    font-size: 2.5rem;
+  .matchBox {
+    min-width: 220px;
   }
 }
 
 @media (max-width: 768px) {
-  .bracketsContainer {
+  .bracketsWrapper {
     gap: 15px;
-    padding: 10px;
+    padding: 15px 5px;
+    min-height: auto;
   }
 
   .round {
-    min-width: 220px;
+    min-width: 240px;
   }
 
-  .roundTitle {
-    font-size: 0.75rem;
+  .roundLabel {
+    font-size: 0.65rem;
   }
 
-  .nombre {
-    font-size: 0.75rem;
+  .matchBox {
+    min-width: 200px;
   }
 
-  .gol {
+  .name {
+    font-size: 0.7rem;
+  }
+
+  .code {
+    font-size: 0.6rem;
+  }
+
+  .scoreNum {
     font-size: 1.2rem;
   }
 
   .header h1 {
-    font-size: 1.8rem;
-  }
-
-  .inputGol {
-    width: 35px;
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }

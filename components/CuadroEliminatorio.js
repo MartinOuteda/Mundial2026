@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import styles from '@/styles/CuadroEliminatorio.module.css';
+import styles from '@/styles/CuadroEliminatorio_v2.module.css';
 
 export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [editando, setEditando] = useState(null); // {roundId, matchId}
+  const [editando, setEditando] = useState(null);
   const [golesTemp, setGolesTemp] = useState({ goles1: 0, goles2: 0 });
 
   useEffect(() => {
@@ -53,103 +53,96 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  if (cargando) {
-    return <div className={styles.cargando}>Cargando cuadro eliminatorio...</div>;
-  }
-
-  if (!cuadro) {
-    return <div className={styles.error}>Error cargando cuadro eliminatorio</div>;
-  }
-
   const renderMatch = (match, roundId, matchId) => {
     const isEditing = editando?.matchId === matchId && editando?.roundId === roundId;
     const hasGanador = match.ganador_id !== null;
 
     return (
-      <div key={matchId} className={`${styles.match} ${hasGanador ? styles.matchCompleted : ''}`}>
-        {/* Equipo 1 */}
-        <div className={styles.equipo}>
-          {match.equipo_1_id ? (
-            <>
-              <img 
-                src={match.bandera_1} 
-                alt={match.equipo_1}
-                className={styles.bandera}
-                onError={(e) => {e.target.style.display = 'none'}}
-              />
-              <div className={styles.equipoInfo}>
-                <span className={styles.codigo}>{match.codigo_1}</span>
-                <span className={styles.nombre}>{match.equipo_1}</span>
-              </div>
-            </>
-          ) : (
-            <span className={styles.vacio}>TBD</span>
-          )}
-        </div>
-
-        {/* Goles */}
-        <div className={styles.goles}>
-          {isEditing ? (
-            <>
+      <div key={matchId} className={`${styles.matchBox} ${hasGanador ? styles.completed : ''}`}>
+        {/* EQUIPO 1 */}
+        <div className={styles.teamRow}>
+          <div className={styles.teamInfo}>
+            {match.equipo_1_id ? (
+              <>
+                <img 
+                  src={match.bandera_1} 
+                  alt={match.equipo_1}
+                  className={styles.flag}
+                  onError={(e) => {e.target.style.display = 'none'}}
+                />
+                <div className={styles.teamData}>
+                  <span className={styles.code}>{match.codigo_1}</span>
+                  <span className={styles.name}>{match.equipo_1}</span>
+                </div>
+              </>
+            ) : (
+              <span className={styles.tbd}>TBD</span>
+            )}
+          </div>
+          <div className={styles.score}>
+            {isEditing ? (
               <input 
                 type="number" 
                 min="0" 
                 max="10"
                 value={golesTemp.goles1}
                 onChange={(e) => setGolesTemp({...golesTemp, goles1: e.target.value})}
-                className={styles.inputGol}
+                className={styles.inputScore}
               />
-              <span className={styles.separador}>-</span>
+            ) : (
+              <span className={styles.scoreNum}>{match.goles_1 ?? '-'}</span>
+            )}
+          </div>
+        </div>
+
+        {/* EQUIPO 2 */}
+        <div className={styles.teamRow}>
+          <div className={styles.teamInfo}>
+            {match.equipo_2_id ? (
+              <>
+                <img 
+                  src={match.bandera_2} 
+                  alt={match.equipo_2}
+                  className={styles.flag}
+                  onError={(e) => {e.target.style.display = 'none'}}
+                />
+                <div className={styles.teamData}>
+                  <span className={styles.code}>{match.codigo_2}</span>
+                  <span className={styles.name}>{match.equipo_2}</span>
+                </div>
+              </>
+            ) : (
+              <span className={styles.tbd}>TBD</span>
+            )}
+          </div>
+          <div className={styles.score}>
+            {isEditing ? (
               <input 
                 type="number" 
                 min="0" 
                 max="10"
                 value={golesTemp.goles2}
                 onChange={(e) => setGolesTemp({...golesTemp, goles2: e.target.value})}
-                className={styles.inputGol}
+                className={styles.inputScore}
               />
-            </>
-          ) : (
-            <>
-              <span className={styles.gol}>{match.goles_1 ?? '-'}</span>
-              <span className={styles.separador}>-</span>
-              <span className={styles.gol}>{match.goles_2 ?? '-'}</span>
-            </>
-          )}
+            ) : (
+              <span className={styles.scoreNum}>{match.goles_2 ?? '-'}</span>
+            )}
+          </div>
         </div>
 
-        {/* Equipo 2 */}
-        <div className={styles.equipo}>
-          {match.equipo_2_id ? (
-            <>
-              <img 
-                src={match.bandera_2} 
-                alt={match.equipo_2}
-                className={styles.bandera}
-                onError={(e) => {e.target.style.display = 'none'}}
-              />
-              <div className={styles.equipoInfo}>
-                <span className={styles.codigo}>{match.codigo_2}</span>
-                <span className={styles.nombre}>{match.equipo_2}</span>
-              </div>
-            </>
-          ) : (
-            <span className={styles.vacio}>TBD</span>
-          )}
-        </div>
-
-        {/* Botones */}
-        <div className={styles.acciones}>
+        {/* ACCIONES */}
+        <div className={styles.actions}>
           {isEditing ? (
             <>
               <button 
-                className={styles.btnGuardar}
+                className={styles.btnSave}
                 onClick={() => guardarResultado(roundId, matchId)}
               >
                 ✓
               </button>
               <button 
-                className={styles.btnCancelar}
+                className={styles.btnCancel}
                 onClick={() => setEditando(null)}
               >
                 ✗
@@ -157,7 +150,7 @@ export default function CuadroEliminatorio() {
             </>
           ) : (
             <button 
-              className={styles.btnEditar}
+              className={styles.btnEdit}
               onClick={() => iniciarEdicion(roundId, matchId, match)}
               disabled={!match.equipo_1_id || !match.equipo_2_id}
             >
@@ -169,6 +162,14 @@ export default function CuadroEliminatorio() {
     );
   };
 
+  if (cargando) {
+    return <div className={styles.cargando}>Cargando cuadro eliminatorio...</div>;
+  }
+
+  if (!cuadro) {
+    return <div className={styles.error}>Error cargando datos</div>;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -176,13 +177,18 @@ export default function CuadroEliminatorio() {
         <p>Haz clic en un partido para ingresar el resultado.</p>
       </div>
 
-      <div className={styles.bracketsContainer}>
+      <div className={styles.bracketsWrapper}>
         
         {/* ROUND OF 32 */}
         <div className={styles.round}>
-          <h2 className={styles.roundTitle}>Round of 32</h2>
-          <div className={styles.matches}>
-            {cuadro.roundOf32?.map((match, idx) => 
+          <div className={styles.roundLabel}>ROUND OF 32</div>
+          <div className={styles.matchesColumn}>
+            {cuadro.roundOf32?.slice(0, 8).map((match) => 
+              renderMatch(match, 'ro32', match.id)
+            )}
+          </div>
+          <div className={styles.matchesColumn}>
+            {cuadro.roundOf32?.slice(8, 16).map((match) => 
               renderMatch(match, 'ro32', match.id)
             )}
           </div>
@@ -190,9 +196,14 @@ export default function CuadroEliminatorio() {
 
         {/* ROUND OF 16 */}
         <div className={styles.round}>
-          <h2 className={styles.roundTitle}>Round of 16</h2>
-          <div className={styles.matches}>
-            {cuadro.roundOf16?.map((match, idx) => 
+          <div className={styles.roundLabel}>ROUND OF 16</div>
+          <div className={styles.matchesColumn}>
+            {cuadro.roundOf16?.slice(0, 4).map((match) => 
+              renderMatch(match, 'ro16', match.id)
+            )}
+          </div>
+          <div className={styles.matchesColumn}>
+            {cuadro.roundOf16?.slice(4, 8).map((match) => 
               renderMatch(match, 'ro16', match.id)
             )}
           </div>
@@ -200,19 +211,24 @@ export default function CuadroEliminatorio() {
 
         {/* QUARTER FINALS */}
         <div className={styles.round}>
-          <h2 className={styles.roundTitle}>Cuartos de Final</h2>
-          <div className={styles.matches}>
-            {cuadro.quarterfinals?.map((match, idx) => 
+          <div className={styles.roundLabel}>CUARTOS</div>
+          <div className={styles.matchesColumn}>
+            {cuadro.quarterfinals?.slice(0, 2).map((match) => 
+              renderMatch(match, 'qf', match.id)
+            )}
+          </div>
+          <div className={styles.matchesColumn}>
+            {cuadro.quarterfinals?.slice(2, 4).map((match) => 
               renderMatch(match, 'qf', match.id)
             )}
           </div>
         </div>
 
-        {/* SEMI FINALS */}
+        {/* SEMIFINALS */}
         <div className={styles.round}>
-          <h2 className={styles.roundTitle}>Semifinales</h2>
-          <div className={styles.matches}>
-            {cuadro.semifinals?.map((match, idx) => 
+          <div className={styles.roundLabel}>SEMIFINALES</div>
+          <div className={styles.matchesColumn}>
+            {cuadro.semifinals?.map((match) => 
               renderMatch(match, 'sf', match.id)
             )}
           </div>
@@ -220,17 +236,17 @@ export default function CuadroEliminatorio() {
 
         {/* FINAL */}
         <div className={styles.round}>
-          <h2 className={styles.roundTitle}>FINAL</h2>
-          <div className={styles.finalMatch}>
+          <div className={styles.roundLabel}>FINAL</div>
+          <div className={styles.matchesColumn}>
             {cuadro.final && renderMatch(cuadro.final, 'final', cuadro.final.id)}
           </div>
         </div>
 
       </div>
 
-      {/* THIRD PLACE */}
-      <div className={styles.thirdPlaceSection}>
-        <h2>🥉 Tercer Lugar</h2>
+      {/* TERCER LUGAR */}
+      <div className={styles.thirdPlace}>
+        <h2>🥉 TERCER LUGAR</h2>
         {cuadro.thirdPlace && (
           <div className={styles.thirdPlaceMatch}>
             {renderMatch(cuadro.thirdPlace, 'third', cuadro.thirdPlace.id)}
