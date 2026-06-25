@@ -74,48 +74,64 @@
 
 /* TABLA */
 .tabla {
-  padding: 15px;
+  padding: 20px;
+  overflow-x: auto;
 }
 
-.tablaHeader {
-  display: grid;
-  grid-template-columns: 40px 1fr 50px 50px 50px 50px;
-  gap: 12px;
-  padding: 15px;
+.tablaTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tablaTable thead {
   background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
-  border-radius: 6px;
+}
+
+.tablaTable th {
+  color: #d4af37;
+  padding: 12px 8px;
+  text-align: left;
   font-weight: 700;
   font-size: 0.75rem;
-  color: #d4af37;
   letter-spacing: 0.5px;
-  margin-bottom: 10px;
   text-transform: uppercase;
+  border-bottom: 1px solid #d4af37;
 }
 
-.tablaBody {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.thPos {
+  width: 40px;
+  text-align: center;
 }
 
-.tablaRow {
-  display: grid;
-  grid-template-columns: 40px 1fr 50px 50px 50px 50px;
-  gap: 12px;
-  padding: 15px;
-  background: rgba(42, 52, 81, 0.3);
-  border-radius: 6px;
-  align-items: center;
-  font-size: 0.9rem;
+.thEquipo {
+  width: auto;
+}
+
+.thNum {
+  width: 50px;
+  text-align: center;
+}
+
+.fila {
+  border-bottom: 1px solid rgba(42, 52, 81, 0.5);
+  background: rgba(42, 52, 81, 0.2);
   transition: background 0.2s ease;
 }
 
-.tablaRow:hover {
+.fila:hover {
   background: rgba(212, 175, 55, 0.08);
 }
 
-.posicion {
-  display: flex;
+.tdPos {
+  width: 40px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.tdPos::before {
+  content: attr(data-pos);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 35px;
@@ -124,51 +140,64 @@
   color: #1a1f3a;
   border-radius: 50%;
   font-weight: 900;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
-.equipoCell {
+.fila td:nth-child(1)::before {
+  content: '';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  color: #1a1f3a;
+  border-radius: 50%;
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.tdEquipo {
+  padding: 12px 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 0;
+  gap: 10px;
 }
 
 .bandera {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
 .nombre {
+  font-weight: 600;
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 600;
-  color: #fff;
-  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
 }
 
-.pts, .pj, .gf, .gc, .dg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tdNum {
+  padding: 12px 8px;
+  text-align: center;
   font-weight: 700;
   color: #d4af37;
 }
 
 /* PARTIDOS */
 .partidos {
-  padding: 15px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .partido {
-  display: grid;
-  grid-template-columns: 60px 1fr 60px;
+  display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
   padding: 12px;
   background: rgba(42, 52, 81, 0.3);
   border-radius: 6px;
@@ -183,62 +212,55 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  flex: 0 0 60px;
   justify-content: center;
-}
-
-.equipoIzq {
-  flex-direction: row;
 }
 
 .equipoDer {
   flex-direction: row-reverse;
 }
 
-.flagIzq, .flagDer {
+.flag {
   font-size: 1.3rem;
 }
 
-.nombreCorto {
+.codigo {
   font-size: 0.7rem;
   font-weight: 700;
   color: #a0a8c0;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  width: 30px;
-  text-align: center;
 }
 
-.goles {
+.resultado {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  flex: 1;
 }
 
-.golesInput {
-  width: 40px;
-  height: 35px;
+.input {
+  width: 45px;
+  height: 40px;
   background: rgba(212, 175, 55, 0.15);
   border: 1.5px solid #d4af37;
   border-radius: 4px;
   color: #d4af37;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 900;
   text-align: center;
   transition: all 0.2s ease;
+  padding: 0;
 }
 
-.golesInput:focus {
+.input:focus {
   outline: none;
   background: rgba(212, 175, 55, 0.25);
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
 }
 
-.golesInput::placeholder {
-  color: rgba(212, 175, 55, 0.5);
-}
-
-.vs {
+.resultado span {
   font-size: 0.65rem;
   font-weight: 700;
   color: #8892a8;
@@ -325,16 +347,15 @@
     font-size: 2rem;
   }
 
-  .tablaHeader, .tablaRow {
-    grid-template-columns: 30px 1fr 30px 30px 30px 30px;
-    font-size: 0.65rem;
+  .tablaTable {
+    font-size: 0.75rem;
   }
 
-  .partido {
-    grid-template-columns: 50px 1fr 50px;
+  .thNum {
+    width: 45px;
   }
 
-  .nombreCorto {
-    font-size: 0.65rem;
+  .nombre {
+    font-size: 0.8rem;
   }
 }

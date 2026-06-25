@@ -34,7 +34,7 @@ export default function FaseGrupos() {
           }));
           
           data.partidos.forEach((partido, idx) => {
-            if (partido.goles_1 !== null) {
+            if (partido.goles_1 !== null && partido.goles_2 !== null) {
               setResultados(prev => ({
                 ...prev,
                 [grupo]: {
@@ -128,32 +128,37 @@ export default function FaseGrupos() {
 
             {/* TABLA DE POSICIONES */}
             <div className={styles.tabla}>
-              <div className={styles.tablaHeader}>
-                <div className={styles.colEquipo}>EQUIPO</div>
-                <div className={styles.colPts}>PTS</div>
-                <div className={styles.colPj}>PJ</div>
-                <div className={styles.colGf}>GF</div>
-                <div className={styles.colGc}>GC</div>
-                <div className={styles.colDg}>DG</div>
-              </div>
-              <div className={styles.tablaBody}>
-                {(tablas[grupo] || []).map((equipo, idx) => (
-                  <div key={idx} className={styles.tablaRow}>
-                    <div className={styles.posicion}>{idx + 1}</div>
-                    <div className={styles.equipoCell}>
-                      <span className={styles.bandera}>
-                        {fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre)?.bandera}
-                      </span>
-                      <span className={styles.nombre}>{equipo.nombre.toUpperCase()}</span>
-                    </div>
-                    <div className={styles.pts}>{equipo.puntos}</div>
-                    <div className={styles.pj}>{equipo.partidos_jugados}</div>
-                    <div className={styles.gf}>{equipo.goles_a_favor}</div>
-                    <div className={styles.gc}>{equipo.goles_en_contra}</div>
-                    <div className={styles.dg}>{equipo.goles_a_favor - equipo.goles_en_contra}</div>
-                  </div>
-                ))}
-              </div>
+              <table className={styles.tablaTable}>
+                <thead>
+                  <tr>
+                    <th className={styles.thPos}></th>
+                    <th className={styles.thEquipo}>EQUIPO</th>
+                    <th className={styles.thNum}>PTS</th>
+                    <th className={styles.thNum}>PJ</th>
+                    <th className={styles.thNum}>GF</th>
+                    <th className={styles.thNum}>GC</th>
+                    <th className={styles.thNum}>DG</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(tablas[grupo] || []).map((equipo, idx) => (
+                    <tr key={idx} className={styles.fila}>
+                      <td className={styles.tdPos}>{idx + 1}</td>
+                      <td className={styles.tdEquipo}>
+                        <span className={styles.bandera}>
+                          {fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre)?.bandera}
+                        </span>
+                        <span className={styles.nombre}>{equipo.nombre}</span>
+                      </td>
+                      <td className={styles.tdNum}>{equipo.puntos}</td>
+                      <td className={styles.tdNum}>{equipo.partidos_jugados}</td>
+                      <td className={styles.tdNum}>{equipo.goles_a_favor}</td>
+                      <td className={styles.tdNum}>{equipo.goles_en_contra}</td>
+                      <td className={styles.tdNum}>{equipo.goles_a_favor - equipo.goles_en_contra}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {/* PARTIDOS */}
@@ -161,38 +166,39 @@ export default function FaseGrupos() {
               {fixturePartidos[grupo].map((partido, idx) => {
                 const eq1 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo1);
                 const eq2 = fixtureEquipos[grupo].find(e => e.nombre === partido.equipo2);
-                const jornada = Math.floor(idx / 2) + 1;
                 
                 return (
                   <div key={idx} className={styles.partido}>
                     <div className={styles.equipoIzq}>
-                      <span className={styles.flagIzq}>{eq1?.bandera}</span>
-                      <span className={styles.nombreCorto}>{partido.equipo1.substring(0, 3).toUpperCase()}</span>
+                      <span className={styles.flag}>{eq1?.bandera}</span>
+                      <span className={styles.codigo}>{partido.equipo1.substring(0, 2)}</span>
                     </div>
 
-                    <div className={styles.goles}>
+                    <div className={styles.resultado}>
                       <input
                         type="number"
                         min="0"
                         max="99"
-                        value={resultados[grupo][idx]?.goles1 || ''}
+                        value={resultados[grupo]?.[idx]?.goles1 || ''}
                         onChange={(e) => handleGolesChange(grupo, idx, '1', e.target.value)}
-                        className={styles.golesInput}
+                        className={styles.input}
+                        placeholder="-"
                       />
-                      <span className={styles.vs}>vs</span>
+                      <span>vs</span>
                       <input
                         type="number"
                         min="0"
                         max="99"
-                        value={resultados[grupo][idx]?.goles2 || ''}
+                        value={resultados[grupo]?.[idx]?.goles2 || ''}
                         onChange={(e) => handleGolesChange(grupo, idx, '2', e.target.value)}
-                        className={styles.golesInput}
+                        className={styles.input}
+                        placeholder="-"
                       />
                     </div>
 
                     <div className={styles.equipoDer}>
-                      <span className={styles.nombreCorto}>{partido.equipo2.substring(0, 3).toUpperCase()}</span>
-                      <span className={styles.flagDer}>{eq2?.bandera}</span>
+                      <span className={styles.codigo}>{partido.equipo2.substring(0, 2)}</span>
+                      <span className={styles.flag}>{eq2?.bandera}</span>
                     </div>
                   </div>
                 );
