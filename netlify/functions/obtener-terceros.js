@@ -60,31 +60,44 @@ exports.handler = async (event) => {
   try {
     await client.connect();
 
-    // Obtener el 3er clasificado de cada grupo (12 terceros)
+    // Obtener el 3er clasificado de cada grupo usando ROW_NUMBER
     const query = `
+      WITH ranked AS (
+        SELECT 
+          e.id,
+          e.nombre,
+          e.pais_codigo,
+          e.grupo,
+          tp.puntos,
+          tp.partidos_jugados,
+          tp.goles_a_favor,
+          tp.goles_en_contra,
+          (tp.goles_a_favor - tp.goles_en_contra) as diferencia_goles,
+          ROW_NUMBER() OVER (
+            PARTITION BY tp.grupo 
+            ORDER BY tp.puntos DESC, (tp.goles_a_favor - tp.goles_en_contra) DESC
+          ) as rank
+        FROM tabla_posiciones tp
+        JOIN equipos e ON tp.equipo_id = e.id
+      )
       SELECT 
-        e.id,
-        e.nombre,
-        e.pais_codigo,
-        e.grupo,
-        tp.puntos,
-        tp.partidos_jugados,
-        tp.goles_a_favor,
-        tp.goles_en_contra,
-        (tp.goles_a_favor - tp.goles_en_contra) as diferencia_goles
-      FROM tabla_posiciones tp
-      JOIN equipos e ON tp.equipo_id = e.id
-      WHERE (
-        SELECT COUNT(*) 
-        FROM tabla_posiciones tp2 
-        WHERE tp2.grupo = tp.grupo 
-        AND tp2.puntos > tp.puntos
-      ) = 2
-      ORDER BY tp.puntos DESC, (tp.goles_a_favor - tp.goles_en_contra) DESC
-      LIMIT 12
+        id,
+        nombre,
+        pais_codigo,
+        grupo,
+        puntos,
+        partidos_jugados,
+        goles_a_favor,
+        goles_en_contra,
+        diferencia_goles
+      FROM ranked
+      WHERE rank = 3
+      ORDER BY puntos DESC, diferencia_goles DESC
     `;
 
     const result = await client.query(query);
+
+    console.log(`Encontrados ${result.rows.length} terceros clasificados`);
 
     const terceros = result.rows.map((row, idx) => ({
       posicion: idx + 1,
@@ -96,7 +109,8 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        terceros: terceros
+        terceros: terceros,
+        total: terceros.length
       })
     };
   } catch (error) {
