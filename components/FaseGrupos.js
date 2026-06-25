@@ -181,7 +181,7 @@ export default function FaseGrupos() {
                   <div key={idx} className={styles.partido}>
                     <div className={styles.equipoIzq}>
                       <span className={styles.flag}>{eq1?.bandera}</span>
-                      <span className={styles.codigo}>{partido.equipo1.substring(0, 2)}</span>
+                      <span className={styles.nombreEquipo}>{eq1?.codigo}</span>
                     </div>
 
                     <div className={styles.resultado}>
@@ -207,7 +207,7 @@ export default function FaseGrupos() {
                     </div>
 
                     <div className={styles.equipoDer}>
-                      <span className={styles.codigo}>{partido.equipo2.substring(0, 2)}</span>
+                      <span className={styles.nombreEquipo}>{eq2?.codigo}</span>
                       <span className={styles.flag}>{eq2?.bandera}</span>
                     </div>
                   </div>

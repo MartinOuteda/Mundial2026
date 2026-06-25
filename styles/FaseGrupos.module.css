@@ -20,12 +20,14 @@
   background-clip: text;
   margin: 0;
   letter-spacing: 2px;
+  text-align: center;
 }
 
 .header p {
   font-size: 1.1rem;
   color: #a0a8c0;
   margin-top: 10px;
+  text-align: center;
 }
 
 .gruposGrid {
@@ -224,7 +226,7 @@
   align-items: center;
   gap: 4px;
   flex: 0 0 auto;
-  min-width: 45px;
+  min-width: 50px;
 }
 
 .equipoDer {
@@ -234,6 +236,16 @@
 .flag {
   font-size: 1.1rem;
   flex-shrink: 0;
+}
+
+.nombreEquipo {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  min-width: 32px;
+  text-align: center;
 }
 
 .codigo {
