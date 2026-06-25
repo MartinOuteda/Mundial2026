@@ -100,7 +100,7 @@ exports.handler = async (event) => {
         FROM tabla_posiciones tp
         JOIN equipos e ON tp.equipo_id = e.id
       )
-      SELECT e.id, e.nombre, e.pais_codigo
+      SELECT id, nombre, pais_codigo
       FROM ranked
       WHERE posicion = 3
       ORDER BY puntos DESC, (goles_a_favor - goles_en_contra) DESC
