@@ -141,22 +141,27 @@ export default function FaseGrupos() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(tablas[grupo] || []).map((equipo, idx) => (
-                    <tr key={idx} className={styles.fila}>
-                      <td className={styles.tdPos}>{idx + 1}</td>
-                      <td className={styles.tdEquipo}>
-                        <span className={styles.bandera}>
-                          {fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre)?.bandera}
-                        </span>
-                        <span className={styles.nombre}>{equipo.nombre}</span>
-                      </td>
-                      <td className={styles.tdNum}>{equipo.puntos}</td>
-                      <td className={styles.tdNum}>{equipo.partidos_jugados}</td>
-                      <td className={styles.tdNum}>{equipo.goles_a_favor}</td>
-                      <td className={styles.tdNum}>{equipo.goles_en_contra}</td>
-                      <td className={styles.tdNum}>{equipo.goles_a_favor - equipo.goles_en_contra}</td>
-                    </tr>
-                  ))}
+                  {(tablas[grupo] || []).map((equipo, idx) => {
+                    const equipoData = fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre);
+                    return (
+                      <tr key={idx} className={styles.fila}>
+                        <td className={styles.tdPos}>
+                          <div className={styles.posicionCirculo}>{idx + 1}</div>
+                        </td>
+                        <td className={styles.tdEquipo}>
+                          <div className={styles.equipoCell}>
+                            <span className={styles.bandera}>{equipoData?.bandera}</span>
+                            <span className={styles.nombre}>{equipo.nombre}</span>
+                          </div>
+                        </td>
+                        <td className={styles.tdNum}>{equipo.puntos}</td>
+                        <td className={styles.tdNum}>{equipo.partidos_jugados}</td>
+                        <td className={styles.tdNum}>{equipo.goles_a_favor}</td>
+                        <td className={styles.tdNum}>{equipo.goles_en_contra}</td>
+                        <td className={styles.tdNum}>{equipo.goles_a_favor - equipo.goles_en_contra}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

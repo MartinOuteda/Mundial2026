@@ -3,6 +3,7 @@
   background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
   color: #fff;
   padding: 40px 20px;
+  width: 100%;
 }
 
 .header {
@@ -29,10 +30,11 @@
 
 .gruposGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  max-width: 1600px;
+  max-width: 100%;
   margin: 0 auto;
+  width: 100%;
 }
 
 .grupoCard {
@@ -41,7 +43,6 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .grupoCard:hover {
@@ -75,23 +76,21 @@
 /* TABLA */
 .tabla {
   padding: 20px;
-  overflow-x: auto;
 }
 
 .tablaTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
 }
 
-.tablaTable thead {
+.tablaTable thead tr {
   background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
 }
 
 .tablaTable th {
   color: #d4af37;
-  padding: 12px 8px;
-  text-align: left;
+  padding: 12px 6px;
+  text-align: center;
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
@@ -100,23 +99,21 @@
 }
 
 .thPos {
-  width: 40px;
+  width: 45px;
   text-align: center;
 }
 
 .thEquipo {
+  text-align: left;
   width: auto;
 }
 
 .thNum {
-  width: 50px;
-  text-align: center;
+  width: 45px;
 }
 
 .fila {
   border-bottom: 1px solid rgba(42, 52, 81, 0.5);
-  background: rgba(42, 52, 81, 0.2);
-  transition: background 0.2s ease;
 }
 
 .fila:hover {
@@ -124,27 +121,12 @@
 }
 
 .tdPos {
-  width: 40px;
-  padding: 12px 8px;
+  padding: 12px 6px;
   text-align: center;
+  width: 45px;
 }
 
-.tdPos::before {
-  content: attr(data-pos);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 35px;
-  height: 35px;
-  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-  color: #1a1f3a;
-  border-radius: 50%;
-  font-weight: 900;
-  font-size: 0.85rem;
-}
-
-.fila td:nth-child(1)::before {
-  content: '';
+.posicionCirculo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -158,10 +140,16 @@
 }
 
 .tdEquipo {
-  padding: 12px 8px;
+  padding: 12px 6px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.equipoCell {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .bandera {
@@ -180,10 +168,11 @@
 }
 
 .tdNum {
-  padding: 12px 8px;
+  padding: 12px 6px;
   text-align: center;
   font-weight: 700;
   color: #d4af37;
+  font-size: 0.9rem;
 }
 
 /* PARTIDOS */
@@ -201,7 +190,7 @@
   padding: 12px;
   background: rgba(42, 52, 81, 0.3);
   border-radius: 6px;
-  transition: background 0.2s ease;
+  gap: 12px;
 }
 
 .partido:hover {
@@ -212,8 +201,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  flex: 0 0 60px;
-  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 50px;
 }
 
 .equipoDer {
@@ -222,6 +211,7 @@
 
 .flag {
   font-size: 1.3rem;
+  flex-shrink: 0;
 }
 
 .codigo {
@@ -250,7 +240,6 @@
   font-size: 1.1rem;
   font-weight: 900;
   text-align: center;
-  transition: all 0.2s ease;
   padding: 0;
 }
 
@@ -321,41 +310,16 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* RESPONSIVE */
-@media (max-width: 1200px) {
-  .gruposGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 1400px) {
+  .gruposGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .gruposGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 2rem;
-  }
-
-  .tablaTable {
-    font-size: 0.75rem;
-  }
-
-  .thNum {
-    width: 45px;
-  }
-
-  .nombre {
-    font-size: 0.8rem;
-  }
+  .gruposGrid { grid-template-columns: 1fr; }
+  .header h1 { font-size: 2rem; }
+  .nombre { font-size: 0.8rem; }
 }
