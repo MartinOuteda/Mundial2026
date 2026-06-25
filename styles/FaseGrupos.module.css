@@ -30,11 +30,12 @@
 
 .gruposGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(3, minmax(450px, 1fr));
+  gap: 25px;
   max-width: 100%;
   margin: 0 auto;
   width: 100%;
+  padding: 0 20px;
 }
 
 .grupoCard {
@@ -52,12 +53,12 @@
 
 .grupoTitle {
   background: linear-gradient(135deg, #2a3451 0%, #1f2a3f 100%);
-  padding: 20px;
+  padding: 15px;
   border-bottom: 2px solid #d4af37;
 }
 
 .grupoTitle h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: #d4af37;
   margin: 0;
@@ -66,21 +67,22 @@
 
 .subtitle {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #8892a8;
   font-weight: 600;
-  letter-spacing: 1px;
-  margin-top: 5px;
+  letter-spacing: 0.8px;
+  margin-top: 3px;
 }
 
 /* TABLA */
 .tabla {
-  padding: 20px;
+  padding: 15px;
 }
 
 .tablaTable {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.85rem;
 }
 
 .tablaTable thead tr {
@@ -89,17 +91,17 @@
 
 .tablaTable th {
   color: #d4af37;
-  padding: 12px 6px;
+  padding: 10px 4px;
   text-align: center;
   font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  letter-spacing: 0.3px;
   text-transform: uppercase;
   border-bottom: 1px solid #d4af37;
 }
 
 .thPos {
-  width: 45px;
+  width: 40px;
   text-align: center;
 }
 
@@ -109,7 +111,7 @@
 }
 
 .thNum {
-  width: 45px;
+  width: 38px;
 }
 
 .fila {
@@ -121,26 +123,26 @@
 }
 
 .tdPos {
-  padding: 12px 6px;
+  padding: 10px 4px;
   text-align: center;
-  width: 45px;
+  width: 40px;
 }
 
 .posicionCirculo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
   color: #1a1f3a;
   border-radius: 50%;
   font-weight: 900;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .tdEquipo {
-  padding: 12px 6px;
+  padding: 10px 4px;
   display: table-cell;
   vertical-align: middle;
 }
@@ -148,12 +150,12 @@
 .equipoCell {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   min-width: 0;
 }
 
 .bandera {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
@@ -164,33 +166,33 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .tdNum {
-  padding: 12px 6px;
+  padding: 10px 4px;
   text-align: center;
   font-weight: 700;
   color: #d4af37;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 /* PARTIDOS */
 .partidos {
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .partido {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 10px;
   background: rgba(42, 52, 81, 0.3);
   border-radius: 6px;
-  gap: 12px;
+  gap: 10px;
 }
 
 .partido:hover {
@@ -200,9 +202,9 @@
 .equipoIzq, .equipoDer {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex: 0 0 auto;
-  min-width: 50px;
+  min-width: 45px;
 }
 
 .equipoDer {
@@ -210,15 +212,15 @@
 }
 
 .flag {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
 .codigo {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: #a0a8c0;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
 }
 
@@ -226,18 +228,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 }
 
 .input {
-  width: 45px;
-  height: 40px;
+  width: 40px;
+  height: 35px;
   background: rgba(212, 175, 55, 0.15);
   border: 1.5px solid #d4af37;
   border-radius: 4px;
   color: #d4af37;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 900;
   text-align: center;
   padding: 0;
@@ -250,10 +252,10 @@
 }
 
 .resultado span {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
   color: #8892a8;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .cargando {
