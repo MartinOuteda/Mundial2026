@@ -143,8 +143,13 @@ export default function FaseGrupos() {
                 <tbody>
                   {(tablas[grupo] || []).map((equipo, idx) => {
                     const equipoData = fixtureEquipos[grupo]?.find(e => e.nombre === equipo.nombre);
+                    let filaClassName = styles.fila;
+                    
+                    if (idx === 0) filaClassName += ' ' + styles.clasificado1;
+                    else if (idx === 1) filaClassName += ' ' + styles.clasificado2;
+                    
                     return (
-                      <tr key={idx} className={styles.fila}>
+                      <tr key={idx} className={filaClassName}>
                         <td className={styles.tdPos}>
                           <div className={styles.posicionCirculo}>{idx + 1}</div>
                         </td>

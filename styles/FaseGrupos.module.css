@@ -122,6 +122,26 @@
   background: rgba(212, 175, 55, 0.08);
 }
 
+.clasificado1 {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%) !important;
+  border-left: 4px solid #22c55e;
+  font-weight: 600;
+}
+
+.clasificado1:hover {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.25) 0%, rgba(42, 52, 81, 0.3) 100%) !important;
+}
+
+.clasificado2 {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(42, 52, 81, 0.2) 100%) !important;
+  border-left: 4px solid #3b82f6;
+  font-weight: 600;
+}
+
+.clasificado2:hover {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.25) 0%, rgba(42, 52, 81, 0.3) 100%) !important;
+}
+
 .tdPos {
   padding: 10px 4px;
   text-align: center;
