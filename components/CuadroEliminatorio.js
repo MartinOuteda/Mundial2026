@@ -25,8 +25,8 @@ export default function CuadroEliminatorio() {
   };
 
   const guardar = async (matchId) => {
-    const g1 = golesEditando.g1.trim();
-    const g2 = golesEditando.g2.trim();
+    const g1 = String(golesEditando.g1 || '').trim();
+    const g2 = String(golesEditando.g2 || '').trim();
 
     if (!g1 || !g2) {
       alert('Completa ambos campos');
