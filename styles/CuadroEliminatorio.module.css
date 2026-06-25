@@ -68,11 +68,16 @@
 /* RO16 caja 6: centrada entre RO32 partido 11-12 */
 .matchesListRO16 > div:nth-child(11) { margin-top: 40px; }
 
-/* RO16 caja 7: centrada entre RO32 partido 13-14 */
-.matchesListRO16 > div:nth-child(13) { margin-top: 40px; }
 
-/* RO16 caja 8: centrada entre RO32 partido 15-16 */
-.matchesListRO16 > div:nth-child(15) { margin-top: 40px; }
+/* Alineación vertical RO16 */
+.matchWrapper:nth-child(1) { margin-top: 40px; }
+.matchWrapper:nth-child(3) { margin-top: 40px; }
+.matchWrapper:nth-child(5) { margin-top: 40px; }
+.matchWrapper:nth-child(7) { margin-top: 40px; }
+.matchWrapper:nth-child(9) { margin-top: 40px; }
+.matchWrapper:nth-child(11) { margin-top: 40px; }
+.matchWrapper:nth-child(13) { margin-top: 40px; }
+.matchWrapper:nth-child(15) { margin-top: 40px; }
 
 .matchCard {
   background: rgba(255, 255, 255, 0.02);
