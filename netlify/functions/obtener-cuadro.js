@@ -195,16 +195,24 @@ exports.handler = async (event) => {
     // TODO: Construir Round of 16, QF, SF, Final basados en ganadores de Round of 32
     const roundOf16 = [];
     
-    // Mapeo de qué partidos del RO32 generan qué partidos del RO16
+    // Mapeo CORRECTO de RO16 con colores
     const emparejamientosRO16 = [
-      [1, 5],      // Ganador(1) vs Ganador(5)
-      [2, 6],      // Ganador(2) vs Ganador(6)
-      [3, 4],      // Ganador(3) vs Ganador(4)
-      [7, 15],     // Ganador(7) vs Ganador(15)
-      [8, 16],     // Ganador(8) vs Ganador(16)
-      [9, 13],     // Ganador(9) vs Ganador(13)
-      [10, 14],    // Ganador(10) vs Ganador(14)
-      [11, 12]     // Ganador(11) vs Ganador(12)
+      [1, 5, 'azul'],       // (E1) vs (T1) - color 1
+      [2, 6, 'naranja'],    // (I1) vs (T2) - color 5
+      [3, 4, 'amarillo'],   // (A2) vs (B2) - color 7
+      [7, 15, 'amarillo'],  // (F1) vs (C2) - color 7
+      [1, 5, 'azul'],       // (K2) vs (L2) - color 1
+      [8, 16, 'naranja'],   // (H1) vs (J2) - color 5
+      [9, 13, 'rojo'],      // (D1) vs (T3) - color 3
+      [10, 14, 'verde'],    // (G1) vs (T4) - color 4
+      [3, 4, 'purpura'],    // (C1) vs (F2) - color 2
+      [9, 13, 'rosa'],      // (E2) vs (I2) - color 6
+      [11, 12, 'gris'],     // (A1) vs (T5) - color 8
+      [11, 12, 'gris'],     // (L1) vs (T6) - color 8
+      [10, 14, 'purpura'],  // (J1) vs (H2) - color 2
+      [2, 6, 'rosa'],       // (D2) vs (G2) - color 6
+      [7, 15, 'rojo'],      // (B1) vs (T7) - color 3
+      [8, 16, 'verde']      // (K1) vs (T8) - color 4
     ];
 
     // Construir Round of 16

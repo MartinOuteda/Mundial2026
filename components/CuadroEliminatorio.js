@@ -4,8 +4,7 @@ import styles from '@/styles/CuadroEliminatorio.module.css';
 export default function CuadroEliminatorio() {
   const [cuadro, setCuadro] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [tab, setTab] = useState('ro32');
-  const [editando, setEditando] = useState(null); // { matchId, tipo: 'fecha' | 'goles' }
+  const [editando, setEditando] = useState(null);
   const [editValues, setEditValues] = useState({});
 
   useEffect(() => {
@@ -70,13 +69,26 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const renderMatch = (match) => {
+  // Obtener color del RO16 según índice
+  const colorRO16 = (idx) => {
+    const colors = [
+      'azul', 'naranja', 'amarillo', 'amarillo',
+      'azul', 'naranja', 'rojo', 'verde',
+      'purpura', 'rosa', 'gris', 'gris',
+      'purpura', 'rosa', 'rojo', 'verde'
+    ];
+    return colors[idx] || 'default';
+  };
+
+  const renderMatch = (match, isRO16 = false, ro16Index = 0) => {
     const isEditingFecha = editando?.matchId === match.id && editando?.tipo === 'fecha';
     const isEditingGoles = editando?.matchId === match.id && editando?.tipo === 'goles';
-    const hasWinner = match.ganador_id !== null;
 
     return (
-      <div key={match.id} className={styles.matchCard}>
+      <div 
+        key={match.id} 
+        className={`${styles.matchCard} ${isRO16 ? styles[`color_${colorRO16(ro16Index)}`] : ''}`}
+      >
         {/* FECHA/HORA */}
         <div className={styles.fechaSection}>
           {isEditingFecha ? (
@@ -114,7 +126,7 @@ export default function CuadroEliminatorio() {
                 type="number"
                 min="0"
                 max="10"
-                value={editValues[`${match.id}_goles1`] || match.goles_1 || 0}
+                value={editValues[`${match.id}_goles1`] !== undefined ? editValues[`${match.id}_goles1`] : (match.goles_1 ?? 0)}
                 onChange={(e) => setEditValues(prev => ({ 
                   ...prev, 
                   [`${match.id}_goles1`]: e.target.value 
@@ -128,7 +140,7 @@ export default function CuadroEliminatorio() {
                 type="number"
                 min="0"
                 max="10"
-                value={editValues[`${match.id}_goles2`] || match.goles_2 || 0}
+                value={editValues[`${match.id}_goles2`] !== undefined ? editValues[`${match.id}_goles2`] : (match.goles_2 ?? 0)}
                 onChange={(e) => setEditValues(prev => ({ 
                   ...prev, 
                   [`${match.id}_goles2`]: e.target.value 
@@ -143,7 +155,7 @@ export default function CuadroEliminatorio() {
           </div>
         ) : (
           <div 
-            className={`${styles.equiposSection} ${hasWinner ? styles.completed : ''}`}
+            className={styles.equiposSection}
             onClick={() => iniciarEdicion(match.id, 'goles', null)}
           >
             <div className={styles.equipoRow}>
@@ -155,7 +167,7 @@ export default function CuadroEliminatorio() {
               ) : (
                 <span className={styles.tbd}>A definir</span>
               )}
-              <span className={styles.goles}>{match.goles_1 ?? '-'}</span>
+              <span className={styles.goles}>{match.goles_1 !== null ? match.goles_1 : '-'}</span>
             </div>
             <div className={styles.equipoRow}>
               {match.equipo_2_id ? (
@@ -166,7 +178,7 @@ export default function CuadroEliminatorio() {
               ) : (
                 <span className={styles.tbd}>A definir</span>
               )}
-              <span className={styles.goles}>{match.goles_2 ?? '-'}</span>
+              <span className={styles.goles}>{match.goles_2 !== null ? match.goles_2 : '-'}</span>
             </div>
           </div>
         )}
@@ -182,37 +194,25 @@ export default function CuadroEliminatorio() {
   const ro16 = cuadro?.roundOf16 || [];
 
   return (
-    <div className={styles.container}>
+    <div className={styles.containerFull}>
       <h1 className={styles.title}>CUADRO ELIMINATORIO</h1>
       
-      {/* TABS */}
-      <div className={styles.tabs}>
-        <button 
-          className={`${styles.tab} ${tab === 'ro32' ? styles.active : ''}`}
-          onClick={() => setTab('ro32')}
-        >
-          Eliminatoria de 32
-        </button>
-        <button 
-          className={`${styles.tab} ${tab === 'ro16' ? styles.active : ''}`}
-          onClick={() => setTab('ro16')}
-        >
-          Octavos de final
-        </button>
-      </div>
-
-      {/* CONTENIDO */}
-      <div className={styles.content}>
-        {tab === 'ro32' && (
+      <div className={styles.bracket}>
+        {/* COLUMNA RO32 */}
+        <div className={styles.column}>
+          <h2 className={styles.columnTitle}>Eliminatoria de 32</h2>
           <div className={styles.matchesList}>
             {ro32.map(match => renderMatch(match))}
           </div>
-        )}
-        {tab === 'ro16' && (
+        </div>
+
+        {/* COLUMNA RO16 */}
+        <div className={styles.column}>
+          <h2 className={styles.columnTitle}>Octavos de final</h2>
           <div className={styles.matchesList}>
-            {ro16.map(match => renderMatch(match))}
+            {ro16.map((match, idx) => renderMatch(match, true, idx))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

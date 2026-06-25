@@ -1,4 +1,4 @@
-.container {
+.containerFull {
   padding: 24px;
   background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
   min-height: 100vh;
@@ -13,52 +13,39 @@
   letter-spacing: 2px;
 }
 
-/* TABS */
-.tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 24px;
-  border-bottom: 2px solid rgba(212, 175, 55, 0.2);
-}
-
-.tab {
-  padding: 12px 24px;
-  background: transparent;
-  border: none;
-  color: #9ca3af;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.tab:hover {
-  color: #d4af37;
-}
-
-.tab.active {
-  color: #d4af37;
-  border-bottom-color: #d4af37;
-}
-
-/* CONTENIDO */
-.content {
-  max-width: 600px;
+.bracket {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 1400px;
   margin: 0 auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.columnTitle {
+  color: #d4af37;
+  font-size: 1.3rem;
+  border-left: 4px solid #d4af37;
+  padding-left: 12px;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .matchesList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .matchCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 8px;
-  padding: 16px;
+  padding: 14px;
   transition: all 0.3s ease;
 }
 
@@ -67,19 +54,53 @@
   background: rgba(212, 175, 55, 0.05);
 }
 
+/* COLORES RO16 */
+.matchCard.color_azul {
+  border-left: 4px solid #4776B6;
+}
+
+.matchCard.color_naranja {
+  border-left: 4px solid #FB923C;
+}
+
+.matchCard.color_amarillo {
+  border-left: 4px solid #CA8A04;
+}
+
+.matchCard.color_rojo {
+  border-left: 4px solid #EF4444;
+}
+
+.matchCard.color_verde {
+  border-left: 4px solid #22C55E;
+}
+
+.matchCard.color_purpura {
+  border-left: 4px solid #A855F7;
+}
+
+.matchCard.color_rosa {
+  border-left: 4px solid #EC4899;
+}
+
+.matchCard.color_gris {
+  border-left: 4px solid #94A3CF;
+}
+
 /* FECHA */
 .fechaSection {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .fechaDisplay {
   cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 6px;
+  border-radius: 4px;
   background: rgba(212, 175, 55, 0.08);
   transition: all 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .fechaDisplay:hover {
@@ -88,30 +109,28 @@
 
 .fechaText {
   color: #d4af37;
-  font-size: 0.9rem;
   font-weight: 500;
 }
 
 .fechaPlaceholder {
   color: rgba(212, 175, 55, 0.6);
-  font-size: 0.9rem;
   font-style: italic;
 }
 
 .fechaEdit {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
 .fechaInput {
   flex: 1;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: rgba(212, 175, 55, 0.1);
   border: 1px solid #d4af37;
-  border-radius: 6px;
+  border-radius: 4px;
   color: #d4af37;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-family: inherit;
 }
 
@@ -127,72 +146,72 @@
 /* EQUIPOS */
 .equiposSection {
   cursor: pointer;
-  padding: 8px 0;
-}
-
-.equiposSection.completed {
-  opacity: 0.8;
+  padding: 4px 0;
 }
 
 .equipoRow {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
+  gap: 10px;
+  padding: 6px 0;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .flag {
-  width: 30px;
-  height: 20px;
+  width: 26px;
+  height: 18px;
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 .nombreEquipo {
   flex: 1;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .goles {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #d4af37;
-  min-width: 30px;
+  min-width: 25px;
   text-align: right;
 }
 
 .tbd {
   color: #9ca3af;
   font-style: italic;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 /* EDICIÓN DE GOLES */
 .golesEdit {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .equipoEdit {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px;
+  gap: 10px;
+  padding: 6px;
   background: rgba(212, 175, 55, 0.08);
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .golesInputEdit {
-  width: 50px;
-  padding: 6px 8px;
+  width: 45px;
+  padding: 5px 6px;
   background: rgba(212, 175, 55, 0.1);
   border: 1px solid #d4af37;
-  border-radius: 4px;
+  border-radius: 3px;
   color: #d4af37;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
   font-weight: bold;
 }
@@ -204,21 +223,21 @@
 
 .acciones {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* BOTONES */
 .btnSave,
 .btnCancel {
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .btnSave {
@@ -244,4 +263,12 @@
   color: #d4af37;
   padding: 40px;
   font-size: 1.1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .bracket {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
