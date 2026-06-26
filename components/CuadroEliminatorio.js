@@ -8,10 +8,24 @@ export default function CuadroEliminatorio() {
   const [golesEditando, setGolesEditando] = useState({ g1: '', g2: '' });
   const [editandoFechaId, setEditandoFechaId] = useState(null);
   const [fechaEditando, setFechaEditando] = useState('');
+  const [terceros, setTerceros] = useState([]);
+  const [seleccionandoTerceroId, setSeleccionandoTerceroId] = useState(null);
 
   useEffect(() => {
     cargarCuadro();
+    cargarTerceros();
   }, []);
+
+  const cargarTerceros = async () => {
+    try {
+      const res = await fetch('/.netlify/functions/obtener-terceros');
+      const response = await res.json();
+      let data = response.body ? JSON.parse(response.body) : response;
+      setTerceros(data);
+    } catch (error) {
+      console.error('Error cargando terceros:', error);
+    }
+  };
 
   const cargarCuadro = async () => {
     try {
@@ -79,6 +93,27 @@ export default function CuadroEliminatorio() {
         cargarCuadro();
       } else {
         alert('Error guardando fecha');
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
+  const guardarTercero = async (matchId, equipoId) => {
+    try {
+      const res = await fetch('/.netlify/functions/guardar-tercero', {
+        method: 'POST',
+        body: JSON.stringify({
+          matchId: parseInt(matchId),
+          equipoId: parseInt(equipoId)
+        })
+      });
+
+      if (res.ok) {
+        setSeleccionandoTerceroId(null);
+        cargarCuadro();
+      } else {
+        alert('Error guardando tercero');
       }
     } catch (error) {
       alert('Error: ' + error.message);
@@ -187,7 +222,11 @@ export default function CuadroEliminatorio() {
           <h2 className={styles.columnTitle}>Eliminatoria de 16</h2>
           <div className={styles.matchesListRO16}>
             {Array.from({ length: 16 }).map((_, i) => (
-              <div key={i} className={i % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}>
+              <div 
+                key={i} 
+                className={i % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}
+                style={i % 2 === 0 ? { marginTop: '65px' } : {}}
+              >
                 {i % 2 === 0 && renderMatch(ro16[Math.floor(i / 2)], true, Math.floor(i / 2))}
               </div>
             ))}
