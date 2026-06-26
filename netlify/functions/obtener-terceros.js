@@ -9,10 +9,9 @@ exports.handler = async (event) => {
     await client.connect();
 
     const query = `
-      SELECT id, equipo, indice_orden
+      SELECT id, equipo
       FROM tabla_posiciones
-      WHERE indice_orden IS NOT NULL
-      ORDER BY indice_orden ASC
+      ORDER BY id
     `;
 
     const result = await client.query(query);
