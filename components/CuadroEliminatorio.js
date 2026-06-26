@@ -120,9 +120,16 @@ export default function CuadroEliminatorio() {
     }
   };
 
+  const tieneTecer = (matchId) => {
+    // IDs de los 8 partidos que incluyen terceros: 17, 18, 23, 24, 29, 30, 31, 32
+    return [17, 18, 23, 24, 29, 30, 31, 32].includes(matchId);
+  };
+
   const renderMatch = (match, isRO16 = false, idx = 0) => {
     const isEditing = editandoId === match.id;
     const isEditingFecha = editandoFechaId === match.id;
+    const seleccionandoTercero = seleccionandoTerceroId === match.id;
+    const conTercero = !isRO16 && tieneTecer(match.id);
 
     return (
       <div key={match.id} className={`${styles.matchCard} ${isRO16 ? styles[`color_${['azul', 'amarillo', 'naranja', 'amarillo', 'rojo', 'gris', 'rosa', 'verde'][idx]}`] : ''}`}>
@@ -182,10 +189,34 @@ export default function CuadroEliminatorio() {
               <button className={styles.btnCancel} onClick={() => setEditandoId(null)}>✗</button>
             </div>
           </div>
+        ) : conTercero && seleccionandoTercero ? (
+          <div className={styles.terceroDropdown}>
+            <div className={styles.equipoRow}>
+              {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
+              <span className={styles.nombreEquipo}>{match.equipo_1 || 'A definir'}</span>
+              <span className={styles.goles}>-</span>
+            </div>
+            <select 
+              className={styles.selectTercero}
+              onChange={(e) => guardarTercero(match.id, e.target.value)}
+            >
+              <option value="">Seleccionar tercero...</option>
+              {terceros.map(t => (
+                <option key={t.id} value={t.id}>
+                  {t.equipo}
+                </option>
+              ))}
+            </select>
+            <button className={styles.btnCancel} onClick={() => setSeleccionandoTerceroId(null)}>✗</button>
+          </div>
         ) : (
           <div className={styles.equiposSection} onClick={() => {
-            setEditandoId(match.id);
-            setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
+            if (conTercero) {
+              setSeleccionandoTerceroId(match.id);
+            } else {
+              setEditandoId(match.id);
+              setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
+            }
           }}>
             <div className={styles.equipoRow}>
               {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}

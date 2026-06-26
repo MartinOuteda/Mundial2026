@@ -51,22 +51,22 @@
 
 /* Alineación vertical RO16 - centrar entre pares RO32 */
 /* RO16 caja 1: centrada entre RO32 partido 1-2 */
-.matchesListRO16 > div:nth-child(1) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(1) { margin-top: 40px; }
 
 /* RO16 caja 2: centrada entre RO32 partido 3-4 */
-.matchesListRO16 > div:nth-child(3) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(3) { margin-top: 40px; }
 
 /* RO16 caja 3: centrada entre RO32 partido 5-6 */
-.matchesListRO16 > div:nth-child(5) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(5) { margin-top: 40px; }
 
 /* RO16 caja 4: centrada entre RO32 partido 7-8 */
-.matchesListRO16 > div:nth-child(7) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(7) { margin-top: 40px; }
 
 /* RO16 caja 5: centrada entre RO32 partido 9-10 */
-.matchesListRO16 > div:nth-child(9) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(9) { margin-top: 40px; }
 
 /* RO16 caja 6: centrada entre RO32 partido 11-12 */
-.matchesListRO16 > div:nth-child(11) { margin-top: 50px; }
+.matchesListRO16 > div:nth-child(11) { margin-top: 40px; }
 
 
 /* Alineación vertical RO16 */
@@ -271,6 +271,28 @@
   color: #d4af37;
   padding: 40px;
   font-size: 1.1rem;
+}
+
+/* TERCERO DROPDOWN */
+.terceroDropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectTercero {
+  padding: 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.selectTercero:focus {
+  outline: none;
+  background: rgba(212, 175, 55, 0.15);
 }
 
 /* RESPONSIVE */
