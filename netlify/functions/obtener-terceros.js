@@ -8,11 +8,17 @@ exports.handler = async (event) => {
 
     await client.connect();
 
-    // Traer los 12 terceros (posición 3 en cada grupo)
+    // Los terceros son los 12 registros después de ordenar por grupo y puntos
+    // (quedan como 3er lugar de cada grupo)
     const query = `
-      SELECT * FROM tabla_posiciones 
-      WHERE posicion = 3 
-      ORDER BY pts DESC, dg DESC
+      WITH ranked AS (
+        SELECT *,
+          ROW_NUMBER() OVER (PARTITION BY grupo ORDER BY puntos DESC, goles_a_favor - goles_en_contra DESC) as posicion
+        FROM tabla_posiciones
+      )
+      SELECT * FROM ranked
+      WHERE posicion = 3
+      ORDER BY puntos DESC, goles_a_favor - goles_en_contra DESC
     `;
 
     const result = await client.query(query);
