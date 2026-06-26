@@ -15,7 +15,6 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const data = await res.json();
-      console.log('Terceros cargados:', data);
       setTerceros(data);
     } catch (error) {
       console.error('Error:', error);
@@ -79,11 +78,9 @@ export default function TercerClasificado() {
           <tbody>
             {terceros.map((tercero, idx) => (
               <tr key={tercero.id} className={idx < 8 ? styles.mejoresOcho : ''}>
-                <td className={styles.numero}>
-                  <div className={styles.circulo}>{idx + 1}</div>
-                </td>
-                <td className={styles.equipo}>{tercero.nombre_equipo || '?'}</td>
-                <td className={styles.grupo}>{tercero.grupo}</td>
+                <td className={styles.numero}>{idx + 1}</td>
+                <td className={styles.equipo}>{tercero.nombre_equipo || tercero.equipo || '?'}</td>
+                <td className={styles.grupo}>{tercero.grupo || '-'}</td>
                 <td>{tercero.pts || 0}</td>
                 <td>{tercero.pj || 0}</td>
                 <td>{tercero.gf || 0}</td>
@@ -121,7 +118,6 @@ export default function TercerClasificado() {
                         setEditandoId(tercero.id);
                         setIndiceEditando(tercero.indice_orden || '');
                       }}
-                      style={{ cursor: 'pointer' }}
                     >
                       {tercero.indice_orden || '-'}
                     </div>
