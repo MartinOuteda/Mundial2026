@@ -273,6 +273,23 @@
   font-size: 1.1rem;
 }
 
+.selectTercero {
+  padding: 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 100%;
+  margin: 6px 0;
+}
+
+.selectTercero:focus {
+  outline: none;
+  background: rgba(212, 175, 55, 0.15);
+}
+
 /* TERCERO DROPDOWN */
 .terceroDropdown {
   display: flex;
