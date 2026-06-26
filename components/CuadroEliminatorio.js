@@ -9,7 +9,6 @@ export default function CuadroEliminatorio() {
   const [editandoFechaId, setEditandoFechaId] = useState(null);
   const [fechaEditando, setFechaEditando] = useState('');
   const [terceros, setTerceros] = useState([]);
-  const [seleccionandoTerceroId, setSeleccionandoTerceroId] = useState(null);
 
   useEffect(() => {
     cargarCuadro();
@@ -21,9 +20,10 @@ export default function CuadroEliminatorio() {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const response = await res.json();
       let data = response.body ? JSON.parse(response.body) : response;
-      setTerceros(data);
+      setTerceros(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error cargando terceros:', error);
+      setTerceros([]);
     }
   };
 
@@ -120,16 +120,16 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const tieneTecer = (matchId) => {
-    // IDs de los 8 partidos que incluyen terceros: 17, 18, 23, 24, 29, 30, 31, 32
-    return [17, 18, 23, 24, 29, 30, 31, 32].includes(matchId);
+  const tieneTecer = (match, isRO16) => {
+    // En RO32, si equipo_2_id es null, es un tercero
+    return !isRO16 && match.equipo_2_id === null;
   };
 
   const renderMatch = (match, isRO16 = false, idx = 0) => {
     const isEditing = editandoId === match.id;
     const isEditingFecha = editandoFechaId === match.id;
     const seleccionandoTercero = seleccionandoTerceroId === match.id;
-    const conTercero = !isRO16 && tieneTecer(match.id);
+    const conTercero = tieneTecer(match, isRO16);
 
     return (
       <div key={match.id} className={`${styles.matchCard} ${isRO16 ? styles[`color_${['azul', 'amarillo', 'naranja', 'amarillo', 'rojo', 'gris', 'rosa', 'verde'][idx]}`] : ''}`}>
@@ -201,7 +201,7 @@ export default function CuadroEliminatorio() {
               onChange={(e) => guardarTercero(match.id, e.target.value)}
             >
               <option value="">Seleccionar tercero...</option>
-              {terceros.map(t => (
+              {Array.isArray(terceros) && terceros.map(t => (
                 <option key={t.id} value={t.id}>
                   {t.equipo}
                 </option>
