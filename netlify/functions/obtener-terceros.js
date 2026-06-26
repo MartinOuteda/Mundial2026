@@ -11,16 +11,16 @@ exports.handler = async (event) => {
     const query = `
       SELECT 
         id, 
-        equipo, 
+        equipo_id,
         grupo, 
         pts, 
         pj, 
         gf, 
         gc, 
-        (gf - gc) as dg,
+        dg,
         indice_orden
       FROM tabla_posiciones
-      ORDER BY pts DESC, (gf - gc) DESC
+      ORDER BY pts DESC, dg DESC
     `;
 
     const result = await client.query(query);
