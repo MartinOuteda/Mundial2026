@@ -8,24 +8,10 @@ export default function CuadroEliminatorio() {
   const [golesEditando, setGolesEditando] = useState({ g1: '', g2: '' });
   const [editandoFechaId, setEditandoFechaId] = useState(null);
   const [fechaEditando, setFechaEditando] = useState('');
-  const [terceros, setTerceros] = useState([]);
 
   useEffect(() => {
     cargarCuadro();
-    cargarTerceros();
   }, []);
-
-  const cargarTerceros = async () => {
-    try {
-      const res = await fetch('/.netlify/functions/obtener-terceros');
-      const response = await res.json();
-      let data = response.body ? JSON.parse(response.body) : response;
-      setTerceros(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Error cargando terceros:', error);
-      setTerceros([]);
-    }
-  };
 
   const cargarCuadro = async () => {
     try {
@@ -99,37 +85,9 @@ export default function CuadroEliminatorio() {
     }
   };
 
-  const guardarTercero = async (matchId, equipoId) => {
-    try {
-      const res = await fetch('/.netlify/functions/guardar-tercero', {
-        method: 'POST',
-        body: JSON.stringify({
-          matchId: parseInt(matchId),
-          equipoId: parseInt(equipoId)
-        })
-      });
-
-      if (res.ok) {
-        setSeleccionandoTerceroId(null);
-        cargarCuadro();
-      } else {
-        alert('Error guardando tercero');
-      }
-    } catch (error) {
-      alert('Error: ' + error.message);
-    }
-  };
-
-  const tieneTecer = (match, isRO16) => {
-    // En RO32, si equipo_2_id es null o undefined, es un tercero
-    return !isRO16 && (match.equipo_2_id === null || match.equipo_2_id === undefined);
-  };
-
   const renderMatch = (match, isRO16 = false, idx = 0) => {
     const isEditing = editandoId === match.id;
     const isEditingFecha = editandoFechaId === match.id;
-    const seleccionandoTercero = seleccionandoTerceroId === match.id;
-    const conTercero = tieneTecer(match, isRO16);
 
     return (
       <div key={match.id} className={`${styles.matchCard} ${isRO16 ? styles[`color_${['azul', 'amarillo', 'naranja', 'amarillo', 'rojo', 'gris', 'rosa', 'verde'][idx]}`] : ''}`}>
@@ -189,34 +147,10 @@ export default function CuadroEliminatorio() {
               <button className={styles.btnCancel} onClick={() => setEditandoId(null)}>✗</button>
             </div>
           </div>
-        ) : conTercero && seleccionandoTercero ? (
-          <div className={styles.terceroDropdown}>
-            <div className={styles.equipoRow}>
-              {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
-              <span className={styles.nombreEquipo}>{match.equipo_1 || 'A definir'}</span>
-              <span className={styles.goles}>-</span>
-            </div>
-            <select 
-              className={styles.selectTercero}
-              onChange={(e) => guardarTercero(match.id, e.target.value)}
-            >
-              <option value="">Seleccionar tercero...</option>
-              {Array.isArray(terceros) && terceros.map(t => (
-                <option key={t.id} value={t.id}>
-                  {t.equipo}
-                </option>
-              ))}
-            </select>
-            <button className={styles.btnCancel} onClick={() => setSeleccionandoTerceroId(null)}>✗</button>
-          </div>
         ) : (
           <div className={styles.equiposSection} onClick={() => {
-            if (conTercero) {
-              setSeleccionandoTerceroId(match.id);
-            } else {
-              setEditandoId(match.id);
-              setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
-            }
+            setEditandoId(match.id);
+            setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
           }}>
             <div className={styles.equipoRow}>
               {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
