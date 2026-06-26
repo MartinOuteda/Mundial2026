@@ -121,8 +121,8 @@ export default function CuadroEliminatorio() {
   };
 
   const tieneTecer = (match, isRO16) => {
-    // En RO32, si equipo_2_id es null, es un tercero
-    return !isRO16 && match.equipo_2_id === null;
+    // En RO32, si equipo_2_id es null o undefined, es un tercero
+    return !isRO16 && (match.equipo_2_id === null || match.equipo_2_id === undefined);
   };
 
   const renderMatch = (match, isRO16 = false, idx = 0) => {
