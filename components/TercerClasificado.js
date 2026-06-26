@@ -4,7 +4,6 @@ import styles from '@/styles/TercerClasificado.module.css';
 export default function TercerClasificado() {
   const [terceros, setTerceros] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
   const [editandoId, setEditandoId] = useState(null);
   const [indiceEditando, setIndiceEditando] = useState('');
 
@@ -14,27 +13,11 @@ export default function TercerClasificado() {
 
   const cargarTerceros = async () => {
     try {
-      console.log('Iniciando carga de terceros...');
       const res = await fetch('/.netlify/functions/obtener-terceros');
-      console.log('Response status:', res.status);
-      
-      const response = await res.json();
-      console.log('Response completa:', response);
-      
-      let data = response.body ? JSON.parse(response.body) : response;
-      console.log('Data procesada:', data);
-      console.log('¿Es array?', Array.isArray(data));
-      
-      // Garantizar que es array
-      const arrayData = Array.isArray(data) ? data : [];
-      console.log('Array final:', arrayData);
-      
-      setTerceros(arrayData);
-      setError(null);
-    } catch (err) {
-      console.error('Error cargando terceros:', err);
-      setError(err.message);
-      setTerceros([]);
+      const data = await res.json();
+      setTerceros(data);
+    } catch (error) {
+      console.error('Error:', error);
     } finally {
       setCargando(false);
     }
@@ -61,35 +44,13 @@ export default function TercerClasificado() {
         setEditandoId(null);
         setIndiceEditando('');
         cargarTerceros();
-      } else {
-        alert('Error guardando índice');
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      console.error('Error:', error);
     }
   };
 
-  if (cargando) return <div className={styles.cargando}>Cargando...</div>;
-
-  if (error) {
-    return (
-      <div className={styles.container}>
-        <div style={{ color: 'red', padding: '20px' }}>
-          Error: {error}
-        </div>
-      </div>
-    );
-  }
-
-  if (!terceros || terceros.length === 0) {
-    return (
-      <div className={styles.container}>
-        <div style={{ color: 'orange', padding: '20px' }}>
-          No hay datos de terceros
-        </div>
-      </div>
-    );
-  }
+  if (cargando) return <div>Cargando...</div>;
 
   return (
     <div className={styles.container}>
@@ -116,19 +77,15 @@ export default function TercerClasificado() {
           </thead>
           <tbody>
             {terceros.map((tercero, idx) => (
-              <tr key={tercero.id || idx}>
-                <td className={styles.numero}>
-                  <div className={styles.circulo}>{idx + 1}</div>
-                </td>
-                <td className={styles.equipo}>
-                  <span>{tercero.equipo || '?'}</span>
-                </td>
+              <tr key={tercero.id} className={idx < 8 ? styles.mejoresOcho : ''}>
+                <td className={styles.numero}>{idx + 1}</td>
+                <td className={styles.equipo}>{tercero.nombre_equipo || tercero.equipo || '?'}</td>
                 <td className={styles.grupo}>{tercero.grupo || '-'}</td>
-                <td>{tercero.pts || '-'}</td>
-                <td>{tercero.pj || '-'}</td>
-                <td>{tercero.gf || '-'}</td>
-                <td>{tercero.gc || '-'}</td>
-                <td>{tercero.dg !== undefined ? tercero.dg : '-'}</td>
+                <td>{tercero.pts || 0}</td>
+                <td>{tercero.pj || 0}</td>
+                <td>{tercero.gf || 0}</td>
+                <td>{tercero.gc || 0}</td>
+                <td>{tercero.dg !== undefined ? tercero.dg : 0}</td>
                 <td className={styles.estado}>✓ Clasifica</td>
                 <td className={styles.indice}>
                   {editandoId === tercero.id ? (
@@ -139,7 +96,6 @@ export default function TercerClasificado() {
                         max="8"
                         value={indiceEditando}
                         onChange={(e) => setIndiceEditando(e.target.value)}
-                        placeholder="1-8"
                         className={styles.indiceInput}
                       />
                       <button 
@@ -163,11 +119,7 @@ export default function TercerClasificado() {
                         setIndiceEditando(tercero.indice_orden || '');
                       }}
                     >
-                      {tercero.indice_orden ? (
-                        <span className={styles.indiceValor}>{tercero.indice_orden}</span>
-                      ) : (
-                        <span className={styles.indiceVacio}>-</span>
-                      )}
+                      {tercero.indice_orden || '-'}
                     </div>
                   )}
                 </td>

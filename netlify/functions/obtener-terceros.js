@@ -8,8 +8,12 @@ exports.handler = async (event) => {
 
     await client.connect();
 
-    // Query simple: trae todo
-    const query = `SELECT * FROM tabla_posiciones LIMIT 50`;
+    // Traer los 12 terceros (posición 3 en cada grupo)
+    const query = `
+      SELECT * FROM tabla_posiciones 
+      WHERE posicion = 3 
+      ORDER BY pts DESC, dg DESC
+    `;
 
     const result = await client.query(query);
     await client.end();
