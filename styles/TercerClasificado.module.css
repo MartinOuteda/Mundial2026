@@ -98,6 +98,15 @@
 .equipo {
   font-weight: 500;
   width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bandera {
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
 }
 
 .grupo {
@@ -115,59 +124,86 @@
 
 .indice {
   text-align: center;
-  width: 100px;
+  width: 120px;
 }
 
 .indiceDisplay {
-  padding: 6px 12px;
-  border: 1px dashed #d4af37;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border: 2px solid #d4af37;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
-  display: inline-block;
-  min-width: 50px;
-  text-align: center;
-  color: white;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 15px;
+  position: relative;
+}
+
+.indiceDisplay::after {
+  content: '✎';
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .indiceDisplay:hover {
-  background-color: rgba(212, 175, 55, 0.2);
-  color: #d4af37;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border-color: #4ade80;
+  color: #4ade80;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+  transform: scale(1.05);
 }
 
 .indiceEdit {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   justify-content: center;
   align-items: center;
+  padding: 2px;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 4px;
 }
 
 .indiceInput {
-  width: 40px;
-  padding: 4px 8px;
-  border: 1px solid #d4af37;
+  width: 45px;
+  padding: 6px 10px;
+  border: 2px solid #d4af37;
   border-radius: 4px;
-  background-color: rgba(15, 20, 25, 0.8);
-  color: white;
-  font-size: 14px;
+  background-color: rgba(15, 20, 25, 0.9);
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: bold;
   text-align: center;
+  transition: all 0.2s;
 }
 
 .indiceInput:focus {
   outline: none;
   border-color: #4ade80;
   background-color: rgba(15, 20, 25, 0.95);
+  color: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
 }
 
 .btnSave,
 .btnCancel {
-  padding: 4px 8px;
+  padding: 6px 10px;
   border: none;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btnSave {
@@ -177,6 +213,7 @@
 
 .btnSave:hover {
   background-color: #22c55e;
+  transform: scale(1.1);
 }
 
 .btnCancel {
@@ -186,4 +223,5 @@
 
 .btnCancel:hover {
   background-color: #dc2626;
+  transform: scale(1.1);
 }

@@ -1,6 +1,68 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/TercerClasificado.module.css';
 
+// Mapping de equipos a country codes para flags
+const COUNTRY_FLAGS = {
+  'Ecuador': '🇪🇨',
+  'Suecia': '🇸🇪',
+  'Bosnia': '🇧🇦',
+  'Paraguay': '🇵🇾',
+  'Corea del Sur': '🇰🇷',
+  'Croacia': '🇭🇷',
+  'Argelia': '🇩🇿',
+  'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Irán': '🇮🇷',
+  'Cabo Verde': '🇨🇻',
+  'República del Congo': '🇨🇬',
+  'Senegal': '🇸🇳',
+  'Marruecos': '🇲🇦',
+  'Túnez': '🇹🇳',
+  'Ghana': '🇬🇭',
+  'Nigeria': '🇳🇬',
+  'Camerún': '🇨🇲',
+  'Burkina Faso': '🇧🇫',
+  'Mali': '🇲🇱',
+  'Namibia': '🇳🇦',
+  'Zambia': '🇿🇲',
+  'Zimbabwe': '🇿🇼',
+  'Japón': '🇯🇵',
+  'Vietnam': '🇻🇳',
+  'Tailandia': '🇹🇭',
+  'Singapur': '🇸🇬',
+  'Hong Kong': '🇭🇰',
+  'Corea del Norte': '🇰🇵',
+  'Uzbekistán': '🇺🇿',
+  'Irán': '🇮🇷',
+  'Irak': '🇮🇶',
+  'Arabia Saudita': '🇸🇦',
+  'Qatar': '🇶🇦',
+  'Emiratos Árabes Unidos': '🇦🇪',
+  'Omán': '🇴🇲',
+  'Palestina': '🇵🇸',
+  'Israel': '🇮🇱',
+  'Líbano': '🇱🇧',
+  'Jordania': '🇯🇴',
+  'Siria': '🇸🇾',
+  'China': '🇨🇳',
+  'Indonesia': '🇮🇩',
+  'Malasia': '🇲🇾',
+  'Filipinas': '🇵🇭',
+  'India': '🇮🇳',
+  'Bangladesh': '🇧🇩',
+  'Pakistan': '🇵🇰',
+  'Sri Lanka': '🇱🇰',
+  'Australia': '🇦🇺',
+  'Nueva Zelanda': '🇳🇿',
+  'Fiyi': '🇫🇯',
+  'Samoa': '🇼🇸',
+  'Islas Salomón': '🇸🇧',
+  'Vanuatu': '🇻🇺',
+  'Palaos': '🇵🇼',
+  'Kiribati': '🇰🇮',
+  'Nauru': '🇳🇷',
+  'Tuvalu': '🇹🇻',
+};
+
 export default function TercerClasificado() {
   const [terceros, setTerceros] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -51,6 +113,10 @@ export default function TercerClasificado() {
     }
   };
 
+  const getFlag = (nombreEquipo) => {
+    return COUNTRY_FLAGS[nombreEquipo] || '🏳️';
+  };
+
   if (cargando) return <div>Cargando...</div>;
 
   return (
@@ -82,7 +148,10 @@ export default function TercerClasificado() {
                 <td className={styles.numero}>
                   <div className={styles.circulo}>{idx + 1}</div>
                 </td>
-                <td className={styles.equipo}>{tercero.nombre_equipo || '?'}</td>
+                <td className={styles.equipo}>
+                  <span className={styles.bandera}>{getFlag(tercero.nombre_equipo)}</span>
+                  {tercero.nombre_equipo || '?'}
+                </td>
                 <td className={styles.grupo}>{tercero.grupo}</td>
                 <td>{tercero.pts || 0}</td>
                 <td>{tercero.pj || 0}</td>
