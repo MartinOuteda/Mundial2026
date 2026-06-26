@@ -8,20 +8,8 @@ exports.handler = async (event) => {
 
     await client.connect();
 
-    const query = `
-      SELECT 
-        id, 
-        equipo_id,
-        grupo, 
-        pts, 
-        pj, 
-        gf, 
-        gc, 
-        dg,
-        indice_orden
-      FROM tabla_posiciones
-      ORDER BY pts DESC, dg DESC
-    `;
+    // Query simple: trae todo
+    const query = `SELECT * FROM tabla_posiciones LIMIT 50`;
 
     const result = await client.query(query);
     await client.end();
