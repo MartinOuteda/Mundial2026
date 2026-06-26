@@ -4,6 +4,7 @@ import styles from '@/styles/TercerClasificado.module.css';
 export default function TercerClasificado() {
   const [terceros, setTerceros] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
   const [editandoId, setEditandoId] = useState(null);
   const [indiceEditando, setIndiceEditando] = useState('');
 
@@ -13,12 +14,27 @@ export default function TercerClasificado() {
 
   const cargarTerceros = async () => {
     try {
+      console.log('Iniciando carga de terceros...');
       const res = await fetch('/.netlify/functions/obtener-terceros');
+      console.log('Response status:', res.status);
+      
       const response = await res.json();
+      console.log('Response completa:', response);
+      
       let data = response.body ? JSON.parse(response.body) : response;
-      setTerceros(data);
-    } catch (error) {
-      console.error('Error:', error);
+      console.log('Data procesada:', data);
+      console.log('¿Es array?', Array.isArray(data));
+      
+      // Garantizar que es array
+      const arrayData = Array.isArray(data) ? data : [];
+      console.log('Array final:', arrayData);
+      
+      setTerceros(arrayData);
+      setError(null);
+    } catch (err) {
+      console.error('Error cargando terceros:', err);
+      setError(err.message);
+      setTerceros([]);
     } finally {
       setCargando(false);
     }
@@ -55,6 +71,26 @@ export default function TercerClasificado() {
 
   if (cargando) return <div className={styles.cargando}>Cargando...</div>;
 
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div style={{ color: 'red', padding: '20px' }}>
+          Error: {error}
+        </div>
+      </div>
+    );
+  }
+
+  if (!terceros || terceros.length === 0) {
+    return (
+      <div className={styles.container}>
+        <div style={{ color: 'orange', padding: '20px' }}>
+          No hay datos de terceros
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -80,12 +116,12 @@ export default function TercerClasificado() {
           </thead>
           <tbody>
             {terceros.map((tercero, idx) => (
-              <tr key={tercero.id}>
+              <tr key={tercero.id || idx}>
                 <td className={styles.numero}>
                   <div className={styles.circulo}>{idx + 1}</div>
                 </td>
                 <td className={styles.equipo}>
-                  <span>{tercero.equipo}</span>
+                  <span>{tercero.equipo || '?'}</span>
                 </td>
                 <td className={styles.grupo}>{tercero.grupo || '-'}</td>
                 <td>{tercero.pts || '-'}</td>
