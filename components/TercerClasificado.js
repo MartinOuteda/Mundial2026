@@ -4,100 +4,141 @@ import styles from '@/styles/TercerClasificado.module.css';
 export default function TercerClasificado() {
   const [terceros, setTerceros] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [editandoId, setEditandoId] = useState(null);
+  const [indiceEditando, setIndiceEditando] = useState('');
 
   useEffect(() => {
     cargarTerceros();
   }, []);
 
   const cargarTerceros = async () => {
-    setCargando(true);
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
-      if (res.ok) {
-        const data = await res.json();
-        setTerceros(data.terceros);
-      }
+      const response = await res.json();
+      let data = response.body ? JSON.parse(response.body) : response;
+      setTerceros(data);
     } catch (error) {
-      console.error('Error cargando terceros:', error);
+      console.error('Error:', error);
     } finally {
       setCargando(false);
     }
   };
 
-  if (cargando) {
-    return <div className={styles.cargando}>Cargando terceros clasificados...</div>;
-  }
+  const guardarIndice = async (equipoId) => {
+    const indice = indiceEditando.trim() ? parseInt(indiceEditando) : null;
+
+    if (indice && (indice < 1 || indice > 8)) {
+      alert('El índice debe ser entre 1 y 8');
+      return;
+    }
+
+    try {
+      const res = await fetch('/.netlify/functions/guardar-indice-orden', {
+        method: 'POST',
+        body: JSON.stringify({
+          equipoId: parseInt(equipoId),
+          indiceOrden: indice
+        })
+      });
+
+      if (res.ok) {
+        setEditandoId(null);
+        setIndiceEditando('');
+        cargarTerceros();
+      } else {
+        alert('Error guardando índice');
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
+  if (cargando) return <div className={styles.cargando}>Cargando...</div>;
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>TERCEROS <span className={styles.highlight}>CLASIFICADOS</span></h1>
+        <h1>TERCEROS <span className={styles.gold}>CLASIFICADOS</span></h1>
         <p>Los 8 mejores terceros de los 12 grupos avanzan al cuadro eliminatorio.</p>
       </div>
 
-      <div className={styles.tableContainer}>
-        <table className={styles.tabla}>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
           <thead>
             <tr>
-              <th className={styles.thPos}>#</th>
-              <th className={styles.thEquipo}>EQUIPO</th>
-              <th className={styles.thGrupo}>GRUPO</th>
-              <th className={styles.thNum}>PTS</th>
-              <th className={styles.thNum}>PJ</th>
-              <th className={styles.thNum}>GF</th>
-              <th className={styles.thNum}>GC</th>
-              <th className={styles.thNum}>DG</th>
-              <th className={styles.thEstado}>ESTADO</th>
+              <th>#</th>
+              <th>EQUIPO</th>
+              <th>GRUPO</th>
+              <th>PTS</th>
+              <th>PJ</th>
+              <th>GF</th>
+              <th>GC</th>
+              <th>DG</th>
+              <th>ESTADO</th>
+              <th>ÍNDICE</th>
             </tr>
           </thead>
           <tbody>
-            {terceros.map((equipo, idx) => {
-              const clasifica = idx < 8;
-              const filaClassName = `${styles.fila} ${clasifica ? styles.clasificado : styles.eliminado}`;
-              
-              return (
-                <tr key={equipo.id} className={filaClassName}>
-                  <td className={styles.tdPos}>
-                    <div className={`${styles.posicion} ${clasifica ? styles.pos1a8 : styles.pos9a12}`}>
-                      {equipo.posicion}
-                    </div>
-                  </td>
-                  <td className={styles.tdEquipo}>
-                    <div className={styles.equipoCell}>
-                      <img 
-                        src={equipo.bandera} 
-                        alt={equipo.nombre}
-                        onError={(e) => {e.target.style.display = 'none'}}
-                        className={styles.bandera}
+            {terceros.map((tercero, idx) => (
+              <tr key={tercero.id}>
+                <td className={styles.numero}>
+                  <div className={styles.circulo}>{idx + 1}</div>
+                </td>
+                <td className={styles.equipo}>
+                  <span>{tercero.equipo}</span>
+                </td>
+                <td className={styles.grupo}>{tercero.grupo || '-'}</td>
+                <td>{tercero.pts || '-'}</td>
+                <td>{tercero.pj || '-'}</td>
+                <td>{tercero.gf || '-'}</td>
+                <td>{tercero.gc || '-'}</td>
+                <td>{tercero.dg !== undefined ? tercero.dg : '-'}</td>
+                <td className={styles.estado}>✓ Clasifica</td>
+                <td className={styles.indice}>
+                  {editandoId === tercero.id ? (
+                    <div className={styles.indiceEdit}>
+                      <input
+                        type="number"
+                        min="1"
+                        max="8"
+                        value={indiceEditando}
+                        onChange={(e) => setIndiceEditando(e.target.value)}
+                        placeholder="1-8"
+                        className={styles.indiceInput}
                       />
-                      <span className={styles.nombre}>{equipo.nombre}</span>
+                      <button 
+                        className={styles.btnSave}
+                        onClick={() => guardarIndice(tercero.id)}
+                      >
+                        ✓
+                      </button>
+                      <button 
+                        className={styles.btnCancel}
+                        onClick={() => setEditandoId(null)}
+                      >
+                        ✗
+                      </button>
                     </div>
-                  </td>
-                  <td className={styles.tdGrupo}>
-                    <span className={styles.grupo}>Grupo {equipo.grupo}</span>
-                  </td>
-                  <td className={styles.tdNum}>{equipo.puntos}</td>
-                  <td className={styles.tdNum}>{equipo.partidos_jugados}</td>
-                  <td className={styles.tdNum}>{equipo.goles_a_favor}</td>
-                  <td className={styles.tdNum}>{equipo.goles_en_contra}</td>
-                  <td className={styles.tdNum}>{equipo.diferencia_goles}</td>
-                  <td className={styles.tdEstado}>
-                    {clasifica ? (
-                      <span className={styles.clasificaSpan}>✓ Clasifica</span>
-                    ) : (
-                      <span className={styles.eliminadoSpan}>✗ Eliminado</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+                  ) : (
+                    <div
+                      className={styles.indiceDisplay}
+                      onClick={() => {
+                        setEditandoId(tercero.id);
+                        setIndiceEditando(tercero.indice_orden || '');
+                      }}
+                    >
+                      {tercero.indice_orden ? (
+                        <span className={styles.indiceValor}>{tercero.indice_orden}</span>
+                      ) : (
+                        <span className={styles.indiceVacio}>-</span>
+                      )}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-      </div>
-
-      <div className={styles.nota}>
-        <p>📋 <strong>Criterio de ordenamiento:</strong> Puntos (descendente) → Diferencia de goles (descendente)</p>
-        <p>🎯 <strong>Clasifican:</strong> Los 8 mejores terceros al Round of 32</p>
       </div>
     </div>
   );
