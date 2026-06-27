@@ -1,31 +1,14 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/TercerClasificado.module.css';
 
-// Mapeo de códigos país a banderas emoji
-const getFlag = (nombreEquipo) => {
-  const flagMap = {
-    'Ecuador': '🇪🇨', 'Suecia': '🇸🇪', 'Bosnia': '🇧🇦', 'Paraguay': '🇵🇾',
-    'Corea del Sur': '🇰🇷', 'Croacia': '🇭🇷', 'Argelia': '🇩🇿', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-    'Irán': '🇮🇷', 'Cabo Verde': '🇨🇻', 'República del Congo': '🇨🇬', 'Senegal': '🇸🇳',
-    'Marruecos': '🇲🇦', 'Túnez': '🇹🇳', 'Ghana': '🇬🇭', 'Nigeria': '🇳🇬',
-    'Camerún': '🇨🇲', 'Burkina Faso': '🇧🇫', 'Mali': '🇲🇱', 'Namibia': '🇳🇦',
-    'Zambia': '🇿🇲', 'Zimbabwe': '🇿🇼', 'Japón': '🇯🇵', 'Vietnam': '🇻🇳',
-    'Tailandia': '🇹🇭', 'Singapur': '🇸🇬', 'Hong Kong': '🇭🇰', 'Corea del Norte': '🇰🇵',
-    'Uzbekistán': '🇺🇿', 'Irak': '🇮🇶', 'Arabia Saudita': '🇸🇦', 'Qatar': '🇶🇦',
-    'Emiratos Árabes Unidos': '🇦🇪', 'Omán': '🇴🇲', 'Palestina': '🇵🇸', 'Israel': '🇮🇱',
-    'Líbano': '🇱🇧', 'Jordania': '🇯🇴', 'Siria': '🇸🇾', 'China': '🇨🇳',
-    'Indonesia': '🇮🇩', 'Malasia': '🇲🇾', 'Filipinas': '🇵🇭', 'India': '🇮🇳',
-    'Bangladesh': '🇧🇩', 'Pakistan': '🇵🇰', 'Sri Lanka': '🇱🇰', 'Australia': '🇦🇺',
-    'Nueva Zelanda': '🇳🇿', 'Fiyi': '🇫🇯', 'Samoa': '🇼🇸', 'Islas Salomón': '🇸🇧',
-  };
-  
-  // Intentar match exacto primero
-  if (flagMap[nombreEquipo]) {
-    return flagMap[nombreEquipo];
-  }
-  
-  // Si no encuentra, retornar placeholder
-  return '🏳️';
+// Mapeo equipo_id → bandera (igual que en FaseGrupos)
+const TEAM_FLAGS = {
+  1: '🇦🇷', 2: '🇵🇪', 3: '🇺🇾', 4: '🇨🇴', 5: '🇧🇷', 6: '🇵🇦', 7: '🇨🇴', 8: '🇲🇽',
+  9: '🇫🇷', 10: '🇩🇪', 11: '🇪🇸', 12: '🇳🇱', 13: '🇵🇹', 14: '🇵🇱', 15: '🇮🇹', 16: '🇷🇴',
+  17: '🇪🇨', 18: '🇸🇪', 19: '🇧🇦', 20: '🇵🇾', 21: '🇰🇷', 22: '🇭🇷', 23: '🇩🇿', 24: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  25: '🇮🇷', 26: '🇨🇻', 27: '🇨🇬', 28: '🇸🇳', 29: '🇲🇦', 30: '🇹🇳', 31: '🇬🇭', 32: '🇳🇬',
+  33: '🇨🇲', 34: '🇧🇫', 35: '🇲🇱', 36: '🇳🇦', 37: '🇿🇲', 38: '🇿🇼', 39: '🇯🇵', 40: '🇻🇳',
+  41: '🇹🇭', 42: '🇸🇬', 43: '🇭🇰', 44: '🇰🇵', 45: '🇺🇿', 46: '🇮🇶', 47: '🇸🇦', 48: '🇶🇦',
 };
 
 export default function TercerClasificado() {
@@ -42,7 +25,7 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const data = await res.json();
-      console.log('Datos cargados:', data);
+      console.log('TERCEROS:', data);
       setTerceros(data);
     } catch (error) {
       console.error('Error:', error);
@@ -61,10 +44,7 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/guardar-indice-orden', {
         method: 'POST',
-        body: JSON.stringify({
-          equipoId: parseInt(equipoId),
-          indiceOrden: indice
-        })
+        body: JSON.stringify({ equipoId: parseInt(equipoId), indiceOrden: indice })
       });
 
       if (res.ok) {
@@ -105,23 +85,18 @@ export default function TercerClasificado() {
           <tbody>
             {terceros.map((tercero, idx) => {
               const esTop8 = idx < 8;
+              const bandera = TEAM_FLAGS[tercero.equipo_id] || '🏳️';
+              
               return (
-                <tr 
-                  key={tercero.id} 
-                  className={esTop8 ? styles.mejoresOcho : styles.fueraTop8}
-                >
+                <tr key={tercero.id} className={esTop8 ? styles.mejoresOcho : styles.fueraTop8}>
                   <td className={styles.numero}>
                     <div className={esTop8 ? styles.circuloVerde : styles.circuloRojo}>
                       {idx + 1}
                     </div>
                   </td>
                   <td className={styles.equipo}>
-                    <span className={styles.bandera}>
-                      {getFlag(tercero.nombre_equipo)}
-                    </span>
-                    <span className={styles.nombreEquipo}>
-                      {tercero.nombre_equipo || '?'}
-                    </span>
+                    <span className={styles.banderaImg}>{bandera}</span>
+                    <span className={styles.nombreEquipo}>{tercero.nombre_equipo}</span>
                   </td>
                   <td className={styles.grupo}>{tercero.grupo}</td>
                   <td className={styles.stat}>{tercero.pts || 0}</td>
@@ -136,35 +111,17 @@ export default function TercerClasificado() {
                     {editandoId === tercero.id ? (
                       <div className={styles.indiceEdit}>
                         <input
-                          type="number"
-                          min="1"
-                          max="8"
+                          type="number" min="1" max="8"
                           value={indiceEditando}
                           onChange={(e) => setIndiceEditando(e.target.value)}
                           className={styles.indiceInput}
                           autoFocus
                         />
-                        <button 
-                          className={styles.btnSave}
-                          onClick={() => guardarIndice(tercero.id)}
-                        >
-                          ✓
-                        </button>
-                        <button 
-                          className={styles.btnCancel}
-                          onClick={() => setEditandoId(null)}
-                        >
-                          ✗
-                        </button>
+                        <button className={styles.btnSave} onClick={() => guardarIndice(tercero.id)}>✓</button>
+                        <button className={styles.btnCancel} onClick={() => setEditandoId(null)}>✗</button>
                       </div>
                     ) : (
-                      <div
-                        className={styles.indiceDisplay}
-                        onClick={() => {
-                          setEditandoId(tercero.id);
-                          setIndiceEditando(tercero.indice_orden || '');
-                        }}
-                      >
+                      <div className={styles.indiceDisplay} onClick={() => { setEditandoId(tercero.id); setIndiceEditando(tercero.indice_orden || ''); }}>
                         {tercero.indice_orden || '-'}
                       </div>
                     )}
