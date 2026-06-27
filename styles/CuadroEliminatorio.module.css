@@ -35,49 +35,27 @@
   font-weight: bold;
 }
 
-.matchesList, .matchesListRO16 {
+.matchesList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.matchWrapper {
-  display: block;
+/* La columna RO16 se estira a la altura de la columna RO32 (grid stretch) y
+   reparte sus 8 partidos en bandas iguales. Cada banda equivale a un par de
+   partidos del RO32, por eso cada partido queda centrado contra su par
+   (igual que el primero), sin depender de alturas fijas. */
+.matchesListRO16 {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.matchWrapperEmpty {
-  height: 100px;
+.ro16Slot {
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
-
-/* Alineación vertical RO16 - centrar entre pares RO32 */
-/* RO16 caja 1: centrada entre RO32 partido 1-2 */
-.matchesListRO16 > div:nth-child(1) { margin-top: 40px; }
-
-/* RO16 caja 2: centrada entre RO32 partido 3-4 */
-.matchesListRO16 > div:nth-child(3) { margin-top: 40px; }
-
-/* RO16 caja 3: centrada entre RO32 partido 5-6 */
-.matchesListRO16 > div:nth-child(5) { margin-top: 40px; }
-
-/* RO16 caja 4: centrada entre RO32 partido 7-8 */
-.matchesListRO16 > div:nth-child(7) { margin-top: 40px; }
-
-/* RO16 caja 5: centrada entre RO32 partido 9-10 */
-.matchesListRO16 > div:nth-child(9) { margin-top: 40px; }
-
-/* RO16 caja 6: centrada entre RO32 partido 11-12 */
-.matchesListRO16 > div:nth-child(11) { margin-top: 40px; }
-
-
-/* Alineación vertical RO16 */
-.matchWrapper:nth-child(1) { margin-top: 65px; }
-.matchWrapper:nth-child(3) { margin-top: 65px; }
-.matchWrapper:nth-child(5) { margin-top: 65px; }
-.matchWrapper:nth-child(7) { margin-top: 65px; }
-.matchWrapper:nth-child(9) { margin-top: 65px; }
-.matchWrapper:nth-child(11) { margin-top: 65px; }
-.matchWrapper:nth-child(13) { margin-top: 65px; }
-.matchWrapper:nth-child(15) { margin-top: 65px; }
 
 .matchCard {
   background: rgba(255, 255, 255, 0.02);

@@ -186,13 +186,9 @@ export default function CuadroEliminatorio() {
         <div className={styles.columnRO16}>
           <h2 className={styles.columnTitle}>Eliminatoria de 16</h2>
           <div className={styles.matchesListRO16}>
-            {Array.from({ length: 16 }).map((_, i) => (
-              <div 
-                key={i} 
-                className={i % 2 === 0 ? styles.matchWrapper : styles.matchWrapperEmpty}
-                style={i % 2 === 0 ? { marginTop: '65px' } : {}}
-              >
-                {i % 2 === 0 && renderMatch(ro16[Math.floor(i / 2)], true, Math.floor(i / 2))}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className={styles.ro16Slot}>
+                {ro16[i] && renderMatch(ro16[i], true, i)}
               </div>
             ))}
           </div>
