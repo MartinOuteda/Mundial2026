@@ -63,6 +63,11 @@
   border-radius: 6px;
   padding: 10px;
   transition: all 0.3s ease;
+  /* Ancho intermedio común a RO32 y RO16 (ambas usan .matchCard).
+     RO32 deja de ocupar toda la columna y RO16 se ensancha hasta el mismo valor. */
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
 }
 
 .matchCard:hover {
