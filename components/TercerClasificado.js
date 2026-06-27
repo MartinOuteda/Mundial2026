@@ -92,66 +92,73 @@ export default function TercerClasificado() {
             </tr>
           </thead>
           <tbody>
-            {terceros.map((tercero, idx) => (
-              <tr 
-                key={tercero.id} 
-                className={idx < 8 ? styles.mejoresOcho : styles.fueraTop8}
-              >
-                <td className={styles.numero}>
-                  <div className={styles.circulo}>{idx + 1}</div>
-                </td>
-                <td className={styles.equipo}>
-                  <span className={styles.bandera}>
-                    {COUNTRY_FLAGS[tercero.nombre_equipo] || '🏳️'}
-                  </span>
-                  <span>{tercero.nombre_equipo}</span>
-                </td>
-                <td className={styles.grupo}>{tercero.grupo}</td>
-                <td className={styles.stat}>{tercero.pts || 0}</td>
-                <td className={styles.stat}>{tercero.pj || 0}</td>
-                <td className={styles.stat}>{tercero.gf || 0}</td>
-                <td className={styles.stat}>{tercero.gc || 0}</td>
-                <td className={styles.stat}>{tercero.dg !== undefined ? tercero.dg : 0}</td>
-                <td className={styles.estado}>✓ Clasifica</td>
-                <td className={styles.indice}>
-                  {editandoId === tercero.id ? (
-                    <div className={styles.indiceEdit}>
-                      <input
-                        type="number"
-                        min="1"
-                        max="8"
-                        value={indiceEditando}
-                        onChange={(e) => setIndiceEditando(e.target.value)}
-                        className={styles.indiceInput}
-                        autoFocus
-                      />
-                      <button 
-                        className={styles.btnSave}
-                        onClick={() => guardarIndice(tercero.id)}
-                      >
-                        ✓
-                      </button>
-                      <button 
-                        className={styles.btnCancel}
-                        onClick={() => setEditandoId(null)}
-                      >
-                        ✗
-                      </button>
+            {terceros.map((tercero, idx) => {
+              const esTop8 = idx < 8;
+              return (
+                <tr 
+                  key={tercero.id} 
+                  className={esTop8 ? styles.mejoresOcho : styles.fueraTop8}
+                >
+                  <td className={styles.numero}>
+                    <div className={esTop8 ? styles.circuloVerde : styles.circuloRojo}>
+                      {idx + 1}
                     </div>
-                  ) : (
-                    <div
-                      className={styles.indiceDisplay}
-                      onClick={() => {
-                        setEditandoId(tercero.id);
-                        setIndiceEditando(tercero.indice_orden || '');
-                      }}
-                    >
-                      {tercero.indice_orden || '-'}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className={styles.equipo}>
+                    <span className={styles.bandera}>
+                      {COUNTRY_FLAGS[tercero.nombre_equipo] || '🏳️'}
+                    </span>
+                    <span className={styles.nombreEquipo}>{tercero.nombre_equipo}</span>
+                  </td>
+                  <td className={styles.grupo}>{tercero.grupo}</td>
+                  <td className={styles.stat}>{tercero.pts || 0}</td>
+                  <td className={styles.stat}>{tercero.pj || 0}</td>
+                  <td className={styles.stat}>{tercero.gf || 0}</td>
+                  <td className={styles.stat}>{tercero.gc || 0}</td>
+                  <td className={styles.stat}>{tercero.dg !== undefined ? tercero.dg : 0}</td>
+                  <td className={esTop8 ? styles.estadoVerde : styles.estadoRojo}>
+                    ✓ Clasifica
+                  </td>
+                  <td className={styles.indice}>
+                    {editandoId === tercero.id ? (
+                      <div className={styles.indiceEdit}>
+                        <input
+                          type="number"
+                          min="1"
+                          max="8"
+                          value={indiceEditando}
+                          onChange={(e) => setIndiceEditando(e.target.value)}
+                          className={styles.indiceInput}
+                          autoFocus
+                        />
+                        <button 
+                          className={styles.btnSave}
+                          onClick={() => guardarIndice(tercero.id)}
+                        >
+                          ✓
+                        </button>
+                        <button 
+                          className={styles.btnCancel}
+                          onClick={() => setEditandoId(null)}
+                        >
+                          ✗
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        className={styles.indiceDisplay}
+                        onClick={() => {
+                          setEditandoId(tercero.id);
+                          setIndiceEditando(tercero.indice_orden || '');
+                        }}
+                      >
+                        {tercero.indice_orden || '-'}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
