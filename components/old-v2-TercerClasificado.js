@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/TercerClasificado.module.css';
-import { equipos as fixtureEquipos } from '@/lib/fixture';
+
+// Mapeo equipo_id → bandera (igual que en FaseGrupos)
+const TEAM_FLAGS = {
+  1: '🇦🇷', 2: '🇵🇪', 3: '🇺🇾', 4: '🇨🇴', 5: '🇧🇷', 6: '🇵🇦', 7: '🇨🇴', 8: '🇲🇽',
+  9: '🇫🇷', 10: '🇩🇪', 11: '🇪🇸', 12: '🇳🇱', 13: '🇵🇹', 14: '🇵🇱', 15: '🇮🇹', 16: '🇷🇴',
+  17: '🇪🇨', 18: '🇸🇪', 19: '🇧🇦', 20: '🇵🇾', 21: '🇰🇷', 22: '🇭🇷', 23: '🇩🇿', 24: '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  25: '🇮🇷', 26: '🇨🇻', 27: '🇨🇬', 28: '🇸🇳', 29: '🇲🇦', 30: '🇹🇳', 31: '🇬🇭', 32: '🇳🇬',
+  33: '🇨🇲', 34: '🇧🇫', 35: '🇲🇱', 36: '🇳🇦', 37: '🇿🇲', 38: '🇿🇼', 39: '🇯🇵', 40: '🇻🇳',
+  41: '🇹🇭', 42: '🇸🇬', 43: '🇭🇰', 44: '🇰🇵', 45: '🇺🇿', 46: '🇮🇶', 47: '🇸🇦', 48: '🇶🇦',
+};
 
 export default function TercerClasificado() {
   const [terceros, setTerceros] = useState([]);
@@ -16,6 +25,7 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const data = await res.json();
+      console.log('TERCEROS:', data);
       setTerceros(data);
     } catch (error) {
       console.error('Error:', error);
@@ -47,14 +57,6 @@ export default function TercerClasificado() {
     }
   };
 
-  const getEquipoData = (nombreEquipo) => {
-    for (const grupoEquipos of Object.values(fixtureEquipos)) {
-      const eq = grupoEquipos.find(e => e.nombre === nombreEquipo);
-      if (eq) return eq;
-    }
-    return null;
-  };
-
   if (cargando) return <div className={styles.container}><p>Cargando...</p></div>;
 
   return (
@@ -83,7 +85,7 @@ export default function TercerClasificado() {
           <tbody>
             {terceros.map((tercero, idx) => {
               const esTop8 = idx < 8;
-              const equipoData = getEquipoData(tercero.nombre_equipo);
+              const bandera = TEAM_FLAGS[tercero.equipo_id] || '🏳️';
               
               return (
                 <tr key={tercero.id} className={esTop8 ? styles.mejoresOcho : styles.fueraTop8}>
@@ -93,9 +95,7 @@ export default function TercerClasificado() {
                     </div>
                   </td>
                   <td className={styles.equipo}>
-                    {equipoData?.bandera && (
-                      <img src={equipoData.bandera} alt={equipoData.codigo} className={styles.banderaImg} />
-                    )}
+                    <span className={styles.banderaImg}>{bandera}</span>
                     <span className={styles.nombreEquipo}>{tercero.nombre_equipo}</span>
                   </td>
                   <td className={styles.grupo}>{tercero.grupo}</td>
