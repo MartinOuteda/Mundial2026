@@ -104,7 +104,14 @@ export default function TercerClasificado() {
                   <td className={styles.stat}>{tercero.gf || 0}</td>
                   <td className={styles.stat}>{tercero.gc || 0}</td>
                   <td className={styles.stat}>{tercero.dg !== undefined ? tercero.dg : 0}</td>
-                  <td className={esTop8 ? styles.estadoVerde : styles.estadoRojo}>
+                  <td 
+                    style={{
+                      textAlign: 'center',
+                      width: '120px',
+                      color: esTop8 ? '#22c55e !important' : '#ef4444 !important',
+                      fontWeight: '600'
+                    }}
+                  >
                     ✓ Clasifica
                   </td>
                   <td className={styles.indice}>
