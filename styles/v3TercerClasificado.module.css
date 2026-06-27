@@ -1,0 +1,263 @@
+.container {
+  background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+  margin: 0 0 10px 0;
+  letter-spacing: 2px;
+}
+
+.gold {
+  color: #d4af37;
+}
+
+.header p {
+  color: #a0aec0;
+  font-size: 16px;
+  margin: 0;
+}
+
+.tableWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(15, 20, 25, 0.5);
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: rgba(212, 175, 55, 0.15);
+  border-bottom: 2px solid #d4af37;
+}
+
+.table thead th {
+  color: #d4af37;
+  padding: 16px 12px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+.mejoresOcho {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border-left: 4px solid #22c55e;
+}
+
+.mejoresOcho:hover {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.1) 100%);
+}
+
+.fueraTop8 {
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.02) 100%);
+  border-left: 4px solid rgba(239, 68, 68, 0.3);
+}
+
+.fueraTop8:hover {
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+}
+
+.table tbody td {
+  padding: 14px 12px;
+  color: white;
+  font-size: 14px;
+}
+
+.numero {
+  text-align: center;
+  width: 50px;
+}
+
+.circuloVerde {
+  width: 36px;
+  height: 36px;
+  background-color: #22c55e;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+  margin: 0 auto;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+.circuloRojo {
+  width: 36px;
+  height: 36px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+  margin: 0 auto;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.equipo {
+  font-weight: 500;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.banderaImg {
+  width: 28px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.nombreEquipo {
+  flex: 1;
+}
+
+.grupo {
+  text-align: center;
+  width: 80px;
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.stat {
+  text-align: center;
+  width: 50px;
+}
+
+.estadoVerde {
+  text-align: center;
+  width: 120px;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.estadoRojo {
+  text-align: center;
+  width: 120px;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.indice {
+  text-align: center;
+  width: 110px;
+}
+
+.indiceDisplay {
+  padding: 8px 14px;
+  border: 2px solid #d4af37;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.indiceDisplay:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border-color: #4ade80;
+  color: #4ade80;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  transform: scale(1.08);
+}
+
+.indiceEdit {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  background: rgba(212, 175, 55, 0.15);
+  border-radius: 4px;
+}
+
+.indiceInput {
+  width: 48px;
+  padding: 6px 8px;
+  border: 2px solid #d4af37;
+  border-radius: 4px;
+  background-color: rgba(15, 20, 25, 0.9);
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.indiceInput:focus {
+  outline: none;
+  border-color: #4ade80;
+  background-color: rgba(15, 20, 25, 0.95);
+  color: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+}
+
+.btnSave,
+.btnCancel {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnSave {
+  background-color: #4ade80;
+  color: #0f1419;
+}
+
+.btnSave:hover {
+  background-color: #22c55e;
+  transform: scale(1.12);
+}
+
+.btnCancel {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btnCancel:hover {
+  background-color: #dc2626;
+  transform: scale(1.12);
+}
