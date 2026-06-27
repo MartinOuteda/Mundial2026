@@ -1,21 +1,66 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/TercerClasificado.module.css';
 
+// Mapping de equipos a country codes para flags
 const COUNTRY_FLAGS = {
-  'Ecuador': '🇪🇨', 'Suecia': '🇸🇪', 'Bosnia': '🇧🇦', 'Paraguay': '🇵🇾',
-  'Corea del Sur': '🇰🇷', 'Croacia': '🇭🇷', 'Argelia': '🇩🇿', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-  'Irán': '🇮🇷', 'Cabo Verde': '🇨🇻', 'República del Congo': '🇨🇬', 'Senegal': '🇸🇳',
-  'Marruecos': '🇲🇦', 'Túnez': '🇹🇳', 'Ghana': '🇬🇭', 'Nigeria': '🇳🇬',
-  'Camerún': '🇨🇲', 'Burkina Faso': '🇧🇫', 'Mali': '🇲🇱', 'Namibia': '🇳🇦',
-  'Zambia': '🇿🇲', 'Zimbabwe': '🇿🇼', 'Japón': '🇯🇵', 'Vietnam': '🇻🇳',
-  'Tailandia': '🇹🇭', 'Singapur': '🇸🇬', 'Hong Kong': '🇭🇰', 'Corea del Norte': '🇰🇵',
-  'Uzbekistán': '🇺🇿', 'Irak': '🇮🇶', 'Arabia Saudita': '🇸🇦', 'Qatar': '🇶🇦',
-  'Emiratos Árabes Unidos': '🇦🇪', 'Omán': '🇴🇲', 'Palestina': '🇵🇸', 'Israel': '🇮🇱',
-  'Líbano': '🇱🇧', 'Jordania': '🇯🇴', 'Siria': '🇸🇾', 'China': '🇨🇳',
-  'Indonesia': '🇮🇩', 'Malasia': '🇲🇾', 'Filipinas': '🇵🇭', 'India': '🇮🇳',
-  'Bangladesh': '🇧🇩', 'Pakistan': '🇵🇰', 'Sri Lanka': '🇱🇰', 'Australia': '🇦🇺',
-  'Nueva Zelanda': '🇳🇿', 'Fiyi': '🇫🇯', 'Samoa': '🇼🇸', 'Islas Salomón': '🇸🇧',
-  'Vanuatu': '🇻🇺', 'Palaos': '🇵🇼', 'Kiribati': '🇰🇮', 'Nauru': '🇳🇷', 'Tuvalu': '🇹🇻',
+  'Ecuador': '🇪🇨',
+  'Suecia': '🇸🇪',
+  'Bosnia': '🇧🇦',
+  'Paraguay': '🇵🇾',
+  'Corea del Sur': '🇰🇷',
+  'Croacia': '🇭🇷',
+  'Argelia': '🇩🇿',
+  'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Irán': '🇮🇷',
+  'Cabo Verde': '🇨🇻',
+  'República del Congo': '🇨🇬',
+  'Senegal': '🇸🇳',
+  'Marruecos': '🇲🇦',
+  'Túnez': '🇹🇳',
+  'Ghana': '🇬🇭',
+  'Nigeria': '🇳🇬',
+  'Camerún': '🇨🇲',
+  'Burkina Faso': '🇧🇫',
+  'Mali': '🇲🇱',
+  'Namibia': '🇳🇦',
+  'Zambia': '🇿🇲',
+  'Zimbabwe': '🇿🇼',
+  'Japón': '🇯🇵',
+  'Vietnam': '🇻🇳',
+  'Tailandia': '🇹🇭',
+  'Singapur': '🇸🇬',
+  'Hong Kong': '🇭🇰',
+  'Corea del Norte': '🇰🇵',
+  'Uzbekistán': '🇺🇿',
+  'Irán': '🇮🇷',
+  'Irak': '🇮🇶',
+  'Arabia Saudita': '🇸🇦',
+  'Qatar': '🇶🇦',
+  'Emiratos Árabes Unidos': '🇦🇪',
+  'Omán': '🇴🇲',
+  'Palestina': '🇵🇸',
+  'Israel': '🇮🇱',
+  'Líbano': '🇱🇧',
+  'Jordania': '🇯🇴',
+  'Siria': '🇸🇾',
+  'China': '🇨🇳',
+  'Indonesia': '🇮🇩',
+  'Malasia': '🇲🇾',
+  'Filipinas': '🇵🇭',
+  'India': '🇮🇳',
+  'Bangladesh': '🇧🇩',
+  'Pakistan': '🇵🇰',
+  'Sri Lanka': '🇱🇰',
+  'Australia': '🇦🇺',
+  'Nueva Zelanda': '🇳🇿',
+  'Fiyi': '🇫🇯',
+  'Samoa': '🇼🇸',
+  'Islas Salomón': '🇸🇧',
+  'Vanuatu': '🇻🇺',
+  'Palaos': '🇵🇼',
+  'Kiribati': '🇰🇮',
+  'Nauru': '🇳🇷',
+  'Tuvalu': '🇹🇻',
 };
 
 export default function TercerClasificado() {
@@ -32,6 +77,7 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const data = await res.json();
+      console.log('Terceros cargados:', data);
       setTerceros(data);
     } catch (error) {
       console.error('Error:', error);
@@ -42,6 +88,7 @@ export default function TercerClasificado() {
 
   const guardarIndice = async (equipoId) => {
     const indice = indiceEditando.trim() ? parseInt(indiceEditando) : null;
+
     if (indice && (indice < 1 || indice > 8)) {
       alert('El índice debe ser entre 1 y 8');
       return;
@@ -66,7 +113,11 @@ export default function TercerClasificado() {
     }
   };
 
-  if (cargando) return <div className={styles.container}><p>Cargando...</p></div>;
+  const getFlag = (nombreEquipo) => {
+    return COUNTRY_FLAGS[nombreEquipo] || '🏳️';
+  };
+
+  if (cargando) return <div>Cargando...</div>;
 
   return (
     <div className={styles.container}>
@@ -93,25 +144,20 @@ export default function TercerClasificado() {
           </thead>
           <tbody>
             {terceros.map((tercero, idx) => (
-              <tr 
-                key={tercero.id} 
-                className={idx < 8 ? styles.mejoresOcho : styles.fueraTop8}
-              >
+              <tr key={tercero.id} className={idx < 8 ? styles.mejoresOcho : ''}>
                 <td className={styles.numero}>
                   <div className={styles.circulo}>{idx + 1}</div>
                 </td>
                 <td className={styles.equipo}>
-                  <span className={styles.bandera}>
-                    {COUNTRY_FLAGS[tercero.nombre_equipo] || '🏳️'}
-                  </span>
-                  <span>{tercero.nombre_equipo}</span>
+                  <span className={styles.bandera}>{getFlag(tercero.nombre_equipo)}</span>
+                  {tercero.nombre_equipo || '?'}
                 </td>
                 <td className={styles.grupo}>{tercero.grupo}</td>
-                <td className={styles.stat}>{tercero.pts || 0}</td>
-                <td className={styles.stat}>{tercero.pj || 0}</td>
-                <td className={styles.stat}>{tercero.gf || 0}</td>
-                <td className={styles.stat}>{tercero.gc || 0}</td>
-                <td className={styles.stat}>{tercero.dg !== undefined ? tercero.dg : 0}</td>
+                <td>{tercero.pts || 0}</td>
+                <td>{tercero.pj || 0}</td>
+                <td>{tercero.gf || 0}</td>
+                <td>{tercero.gc || 0}</td>
+                <td>{tercero.dg !== undefined ? tercero.dg : 0}</td>
                 <td className={styles.estado}>✓ Clasifica</td>
                 <td className={styles.indice}>
                   {editandoId === tercero.id ? (
@@ -123,7 +169,6 @@ export default function TercerClasificado() {
                         value={indiceEditando}
                         onChange={(e) => setIndiceEditando(e.target.value)}
                         className={styles.indiceInput}
-                        autoFocus
                       />
                       <button 
                         className={styles.btnSave}
@@ -145,6 +190,7 @@ export default function TercerClasificado() {
                         setEditandoId(tercero.id);
                         setIndiceEditando(tercero.indice_orden || '');
                       }}
+                      style={{ cursor: 'pointer' }}
                     >
                       {tercero.indice_orden || '-'}
                     </div>
