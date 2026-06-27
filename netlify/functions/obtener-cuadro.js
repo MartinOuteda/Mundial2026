@@ -82,29 +82,27 @@ exports.handler = async (event) => {
       ORDER BY grupo, posicion
     `;
 
-    // 2. Obtener los 8 mejores terceros
+    // 2. Obtener los terceros con índice de orden asignado manualmente (1 a 8).
+    //    El cruce del Round of 32 se ubica según indice_orden, no por puntos.
     const queryTerceros = `
       WITH ranked AS (
-        SELECT 
+        SELECT
           e.id,
           e.nombre,
           e.pais_codigo,
           e.grupo,
-          tp.puntos,
-          tp.goles_a_favor,
-          tp.goles_en_contra,
+          tp.indice_orden,
           ROW_NUMBER() OVER (
-            PARTITION BY tp.grupo 
+            PARTITION BY tp.grupo
             ORDER BY tp.puntos DESC, (tp.goles_a_favor - tp.goles_en_contra) DESC
           ) as posicion
         FROM tabla_posiciones tp
         JOIN equipos e ON tp.equipo_id = e.id
       )
-      SELECT id, nombre, pais_codigo
+      SELECT id, nombre, pais_codigo, indice_orden
       FROM ranked
-      WHERE posicion = 3
-      ORDER BY puntos DESC, (goles_a_favor - goles_en_contra) DESC
-      LIMIT 8
+      WHERE posicion = 3 AND indice_orden BETWEEN 1 AND 8
+      ORDER BY indice_orden
     `;
 
     // 3. Obtener matches existentes del cuadro
@@ -128,8 +126,10 @@ exports.handler = async (event) => {
     primerosSegundos.forEach(eq => {
       mapEquipos[`${eq.grupo}${eq.posicion}`] = eq;
     });
-    terceros.forEach((eq, idx) => {
-      mapEquipos[`T${idx + 1}`] = eq;
+    // Ubicar cada tercero en su slot T1..T8 según el indice_orden guardado.
+    // Si un índice no fue asignado, su slot queda vacío => "A definir" en el cuadro.
+    terceros.forEach((eq) => {
+      mapEquipos[`T${eq.indice_orden}`] = eq;
     });
 
     // Emparejamientos del Round of 32 (según FIFA World Cup 2026)
