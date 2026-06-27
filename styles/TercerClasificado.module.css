@@ -152,16 +152,17 @@
   width: 50px;
 }
 
-.estadoVerde {
+.estado {
   text-align: center;
   width: 120px;
+}
+
+.estadoVerde {
   color: #22c55e;
   font-weight: 600;
 }
 
 .estadoRojo {
-  text-align: center;
-  width: 120px;
   color: #ef4444;
   font-weight: 600;
 }
