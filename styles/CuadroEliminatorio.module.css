@@ -15,8 +15,11 @@
 
 .bracket {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  /* Columnas al ancho de la tarjeta (320px) en vez de 1fr, para que RO16
+     quede cerca de RO32 y no separada por el espacio sobrante de la columna. */
+  grid-template-columns: 320px 320px;
+  justify-content: center;
+  gap: 48px;
   max-width: 1200px;
   margin: 0 auto;
 }
