@@ -1,21 +1,31 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/TercerClasificado.module.css';
 
-const COUNTRY_FLAGS = {
-  'Ecuador': '🇪🇨', 'Suecia': '🇸🇪', 'Bosnia': '🇧🇦', 'Paraguay': '🇵🇾',
-  'Corea del Sur': '🇰🇷', 'Croacia': '🇭🇷', 'Argelia': '🇩🇿', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-  'Irán': '🇮🇷', 'Cabo Verde': '🇨🇻', 'República del Congo': '🇨🇬', 'Senegal': '🇸🇳',
-  'Marruecos': '🇲🇦', 'Túnez': '🇹🇳', 'Ghana': '🇬🇭', 'Nigeria': '🇳🇬',
-  'Camerún': '🇨🇲', 'Burkina Faso': '🇧🇫', 'Mali': '🇲🇱', 'Namibia': '🇳🇦',
-  'Zambia': '🇿🇲', 'Zimbabwe': '🇿🇼', 'Japón': '🇯🇵', 'Vietnam': '🇻🇳',
-  'Tailandia': '🇹🇭', 'Singapur': '🇸🇬', 'Hong Kong': '🇭🇰', 'Corea del Norte': '🇰🇵',
-  'Uzbekistán': '🇺🇿', 'Irak': '🇮🇶', 'Arabia Saudita': '🇸🇦', 'Qatar': '🇶🇦',
-  'Emiratos Árabes Unidos': '🇦🇪', 'Omán': '🇴🇲', 'Palestina': '🇵🇸', 'Israel': '🇮🇱',
-  'Líbano': '🇱🇧', 'Jordania': '🇯🇴', 'Siria': '🇸🇾', 'China': '🇨🇳',
-  'Indonesia': '🇮🇩', 'Malasia': '🇲🇾', 'Filipinas': '🇵🇭', 'India': '🇮🇳',
-  'Bangladesh': '🇧🇩', 'Pakistan': '🇵🇰', 'Sri Lanka': '🇱🇰', 'Australia': '🇦🇺',
-  'Nueva Zelanda': '🇳🇿', 'Fiyi': '🇫🇯', 'Samoa': '🇼🇸', 'Islas Salomón': '🇸🇧',
-  'Vanuatu': '🇻🇺', 'Palaos': '🇵🇼', 'Kiribati': '🇰🇮', 'Nauru': '🇳🇷', 'Tuvalu': '🇹🇻',
+// Mapeo de códigos país a banderas emoji
+const getFlag = (nombreEquipo) => {
+  const flagMap = {
+    'Ecuador': '🇪🇨', 'Suecia': '🇸🇪', 'Bosnia': '🇧🇦', 'Paraguay': '🇵🇾',
+    'Corea del Sur': '🇰🇷', 'Croacia': '🇭🇷', 'Argelia': '🇩🇿', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+    'Irán': '🇮🇷', 'Cabo Verde': '🇨🇻', 'República del Congo': '🇨🇬', 'Senegal': '🇸🇳',
+    'Marruecos': '🇲🇦', 'Túnez': '🇹🇳', 'Ghana': '🇬🇭', 'Nigeria': '🇳🇬',
+    'Camerún': '🇨🇲', 'Burkina Faso': '🇧🇫', 'Mali': '🇲🇱', 'Namibia': '🇳🇦',
+    'Zambia': '🇿🇲', 'Zimbabwe': '🇿🇼', 'Japón': '🇯🇵', 'Vietnam': '🇻🇳',
+    'Tailandia': '🇹🇭', 'Singapur': '🇸🇬', 'Hong Kong': '🇭🇰', 'Corea del Norte': '🇰🇵',
+    'Uzbekistán': '🇺🇿', 'Irak': '🇮🇶', 'Arabia Saudita': '🇸🇦', 'Qatar': '🇶🇦',
+    'Emiratos Árabes Unidos': '🇦🇪', 'Omán': '🇴🇲', 'Palestina': '🇵🇸', 'Israel': '🇮🇱',
+    'Líbano': '🇱🇧', 'Jordania': '🇯🇴', 'Siria': '🇸🇾', 'China': '🇨🇳',
+    'Indonesia': '🇮🇩', 'Malasia': '🇲🇾', 'Filipinas': '🇵🇭', 'India': '🇮🇳',
+    'Bangladesh': '🇧🇩', 'Pakistan': '🇵🇰', 'Sri Lanka': '🇱🇰', 'Australia': '🇦🇺',
+    'Nueva Zelanda': '🇳🇿', 'Fiyi': '🇫🇯', 'Samoa': '🇼🇸', 'Islas Salomón': '🇸🇧',
+  };
+  
+  // Intentar match exacto primero
+  if (flagMap[nombreEquipo]) {
+    return flagMap[nombreEquipo];
+  }
+  
+  // Si no encuentra, retornar placeholder
+  return '🏳️';
 };
 
 export default function TercerClasificado() {
@@ -32,6 +42,7 @@ export default function TercerClasificado() {
     try {
       const res = await fetch('/.netlify/functions/obtener-terceros');
       const data = await res.json();
+      console.log('Datos cargados:', data);
       setTerceros(data);
     } catch (error) {
       console.error('Error:', error);
@@ -106,9 +117,11 @@ export default function TercerClasificado() {
                   </td>
                   <td className={styles.equipo}>
                     <span className={styles.bandera}>
-                      {COUNTRY_FLAGS[tercero.nombre_equipo] || '🏳️'}
+                      {getFlag(tercero.nombre_equipo)}
                     </span>
-                    <span className={styles.nombreEquipo}>{tercero.nombre_equipo}</span>
+                    <span className={styles.nombreEquipo}>
+                      {tercero.nombre_equipo || '?'}
+                    </span>
                   </td>
                   <td className={styles.grupo}>{tercero.grupo}</td>
                   <td className={styles.stat}>{tercero.pts || 0}</td>
