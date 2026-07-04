@@ -197,82 +197,62 @@ exports.handler = async (event) => {
       
       return {
         ...baseMatch,
-        goles_1: existingMatch?.goles_1 || null,
-        goles_2: existingMatch?.goles_2 || null,
+        goles_1: existingMatch?.goles_1 ?? null,
+        goles_2: existingMatch?.goles_2 ?? null,
         ganador_id: ganador_id,
         fecha_hora: existingMatch?.fecha_hora || null
       };
     });
 
-    // TODO: Construir Round of 16, QF, SF, Final basados en ganadores de Round of 32
-    const roundOf16 = [];
-    
-    // Construir Round of 16 DINÁMICAMENTE desde ganadores del RO32
-    // Agrupar RO32 en pares: (1,2), (3,4), (5,6), (7,8), (9,10), (11,12), (13,14), (15,16)
-    for (let i = 0; i < roundOf32.length; i += 2) {
-      const match1 = roundOf32[i];
-      const match2 = roundOf32[i + 1];
-      
-      // ID del RO16: 33-40
-      const ro16Id = 33 + (i / 2);
-      const existingMatch = matches.find(m => m.id === ro16Id);
-      
-      // Obtener ganadores (si no hay, será null = "A definir")
-      const ganador1Id = match1?.ganador_id || null;
-      const ganador2Id = match2?.ganador_id || null;
-      
-      // Buscar datos del ganador 1
-      let eq1Id = null, eq1Nombre = null, eq1Codigo = null, eq1Bandera = null;
-      if (ganador1Id) {
-        if (ganador1Id === match1?.equipo_1_id) {
-          eq1Id = match1?.equipo_1_id;
-          eq1Nombre = match1?.equipo_1;
-          eq1Codigo = match1?.codigo_1;
-          eq1Bandera = match1?.bandera_1;
-        } else {
-          eq1Id = match1?.equipo_2_id;
-          eq1Nombre = match1?.equipo_2;
-          eq1Codigo = match1?.codigo_2;
-          eq1Bandera = match1?.bandera_2;
-        }
-      }
-      
-      // Buscar datos del ganador 2
-      let eq2Id = null, eq2Nombre = null, eq2Codigo = null, eq2Bandera = null;
-      if (ganador2Id) {
-        if (ganador2Id === match2?.equipo_1_id) {
-          eq2Id = match2?.equipo_1_id;
-          eq2Nombre = match2?.equipo_1;
-          eq2Codigo = match2?.codigo_1;
-          eq2Bandera = match2?.bandera_1;
-        } else {
-          eq2Id = match2?.equipo_2_id;
-          eq2Nombre = match2?.equipo_2;
-          eq2Codigo = match2?.codigo_2;
-          eq2Bandera = match2?.bandera_2;
-        }
-      }
-      
-      roundOf16.push({
-        id: ro16Id,
-        fase: 'RO16',
-        partido_numero: (i / 2) + 1,
-        equipo_1_id: eq1Id,
-        equipo_1: eq1Nombre,
-        codigo_1: eq1Codigo,
-        bandera_1: eq1Bandera,
-        equipo_2_id: eq2Id,
-        equipo_2: eq2Nombre,
-        codigo_2: eq2Codigo,
-        bandera_2: eq2Bandera,
-        goles_1: existingMatch?.goles_1 || null,
-        goles_2: existingMatch?.goles_2 || null,
-        ganador_id: existingMatch?.ganador_id || null,
-        fecha_hora: existingMatch?.fecha_hora || null
-      });
-    }
+    // Ganador (datos completos) de un partido ya construido, según sus goles.
+    // Empate o gol faltante => null (=> "A definir" en la ronda siguiente).
+    const getGanador = (match) => {
+      if (!match) return null;
+      const { goles_1, goles_2 } = match;
+      if (goles_1 == null || goles_2 == null || goles_1 === goles_2) return null;
+      const gana1 = goles_1 > goles_2;
+      return {
+        id: gana1 ? match.equipo_1_id : match.equipo_2_id,
+        nombre: gana1 ? match.equipo_1 : match.equipo_2,
+        codigo: gana1 ? match.codigo_1 : match.codigo_2,
+        bandera: gana1 ? match.bandera_1 : match.bandera_2
+      };
+    };
 
-    const quarterfinals = [];
+    // Construye una ronda tomando los ganadores de la ronda anterior por pares.
+    // idBase = id en cuadro_eliminatorio del primer partido de la ronda.
+    const construirRonda = (rondaAnterior, faseNombre, idBase) => {
+      const ronda = [];
+      for (let i = 0; i < rondaAnterior.length; i += 2) {
+        const g1 = getGanador(rondaAnterior[i]);
+        const g2 = getGanador(rondaAnterior[i + 1]);
+        const matchId = idBase + (i / 2);
+        const existingMatch = matches.find(m => m.id === matchId);
+
+        ronda.push({
+          id: matchId,
+          fase: faseNombre,
+          partido_numero: (i / 2) + 1,
+          equipo_1_id: g1?.id ?? null,
+          equipo_1: g1?.nombre ?? null,
+          codigo_1: g1?.codigo ?? null,
+          bandera_1: g1?.bandera ?? null,
+          equipo_2_id: g2?.id ?? null,
+          equipo_2: g2?.nombre ?? null,
+          codigo_2: g2?.codigo ?? null,
+          bandera_2: g2?.bandera ?? null,
+          goles_1: existingMatch?.goles_1 ?? null,
+          goles_2: existingMatch?.goles_2 ?? null,
+          fecha_hora: existingMatch?.fecha_hora ?? null
+        });
+      }
+      return ronda;
+    };
+
+    // RO16 desde ganadores del RO32 (ids 33-40); QF (Eliminatoria de 8) desde
+    // ganadores del RO16 (ids 41-44). El ganador se calcula de los goles.
+    const roundOf16 = construirRonda(roundOf32, 'RO16', 33);
+    const quarterfinals = construirRonda(roundOf16, 'QF', 41);
     const semifinals = [];
     const final = null;
     const thirdPlace = null;

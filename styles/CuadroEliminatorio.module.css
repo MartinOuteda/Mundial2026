@@ -15,9 +15,10 @@
 
 .bracket {
   display: grid;
-  /* Columnas al ancho de la tarjeta (320px) en vez de 1fr, para que RO16
-     quede cerca de RO32 y no separada por el espacio sobrante de la columna. */
-  grid-template-columns: 320px 320px;
+  /* Columnas al ancho de la tarjeta (320px) en vez de 1fr, para que las rondas
+     queden cerca entre sí y no separadas por el espacio sobrante de la columna.
+     3 columnas: Eliminatoria de 32 / 16 / 8. */
+  grid-template-columns: 320px 320px 320px;
   justify-content: center;
   gap: 48px;
   max-width: 1200px;

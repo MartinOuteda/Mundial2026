@@ -27,8 +27,8 @@ export default function CuadroEliminatorio() {
   };
 
   const guardar = async (matchId) => {
-    const g1 = String(golesEditando.g1 || '').trim();
-    const g2 = String(golesEditando.g2 || '').trim();
+    const g1 = String(golesEditando.g1 ?? '').trim();
+    const g2 = String(golesEditando.g2 ?? '').trim();
 
     if (!g1 || !g2) {
       alert('Completa ambos campos');
@@ -150,7 +150,7 @@ export default function CuadroEliminatorio() {
         ) : (
           <div className={styles.equiposSection} onClick={() => {
             setEditandoId(match.id);
-            setGolesEditando({ g1: match.goles_1 || '', g2: match.goles_2 || '' });
+            setGolesEditando({ g1: match.goles_1 ?? '', g2: match.goles_2 ?? '' });
           }}>
             <div className={styles.equipoRow}>
               {match.bandera_1 && <img src={match.bandera_1} alt="" className={styles.flag} />}
@@ -172,6 +172,7 @@ export default function CuadroEliminatorio() {
 
   const ro32 = cuadro?.roundOf32 || [];
   const ro16 = cuadro?.roundOf16 || [];
+  const qf = cuadro?.quarterfinals || [];
 
   return (
     <div className={styles.containerFull}>
@@ -189,6 +190,16 @@ export default function CuadroEliminatorio() {
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className={styles.ro16Slot}>
                 {ro16[i] && renderMatch(ro16[i], true, i)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={styles.columnRO16}>
+          <h2 className={styles.columnTitle}>Eliminatoria de 8</h2>
+          <div className={styles.matchesListRO16}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className={styles.ro16Slot}>
+                {qf[i] && renderMatch(qf[i], true, i)}
               </div>
             ))}
           </div>
