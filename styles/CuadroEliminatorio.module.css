@@ -15,15 +15,14 @@
 
 .bracket {
   display: grid;
-  /* Columnas al ancho de la tarjeta (320px): Elim. de 32 / 16 / 8 / 4.
-     El bracket usa su ancho natural (max-content) y se centra si entra; si no,
-     scrollea horizontal (soporta agregar más rondas sin romper el layout). */
-  grid-template-columns: repeat(4, 320px);
-  gap: 48px;
-  width: max-content;
-  max-width: 100%;
+  /* 4 columnas (Elim. de 32 / 16 / 8 / 4) que se reparten el ancho y se achican
+     para entrar TODAS juntas en pantalla, sin scroll horizontal.
+     minmax(0, 1fr) permite que las tarjetas se encojan por debajo de 320px. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1300px;
   margin: 0 auto;
-  overflow-x: auto;
 }
 
 .column, .columnRO16 {
