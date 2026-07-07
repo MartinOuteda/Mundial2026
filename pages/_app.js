@@ -33,6 +33,12 @@ function MyApp({ Component, pageProps }) {
           >
             🏆 Cuadro Eliminatorio
           </button>
+          <button
+            className={`nav-btn ${seccionActual === 'semifinales' ? 'activo' : ''}`}
+            onClick={() => setSeccionActual('semifinales')}
+          >
+            🥇 Semifinales
+          </button>
         </div>
       </nav>
 

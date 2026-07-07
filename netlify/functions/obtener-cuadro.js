@@ -249,13 +249,49 @@ exports.handler = async (event) => {
       return ronda;
     };
 
-    // Cada ronda sale de los ganadores de la anterior (ganador = calculado de goles):
-    // RO16 (ids 33-40) <- RO32 | QF/Elim. de 8 (41-44) <- RO16 | SF/Elim. de 4 (45-46) <- QF.
+    // Perdedor (datos completos) de un partido, según sus goles (para el 3er puesto).
+    const getPerdedor = (match) => {
+      if (!match) return null;
+      const { goles_1, goles_2 } = match;
+      if (goles_1 == null || goles_2 == null || goles_1 === goles_2) return null;
+      const pierde1 = goles_1 < goles_2;
+      return {
+        id: pierde1 ? match.equipo_1_id : match.equipo_2_id,
+        nombre: pierde1 ? match.equipo_1 : match.equipo_2,
+        codigo: pierde1 ? match.codigo_1 : match.codigo_2,
+        bandera: pierde1 ? match.bandera_1 : match.bandera_2
+      };
+    };
+
+    // Un único partido (Final / 3er puesto) a partir de dos participantes ya resueltos.
+    const construirPartido = (p1, p2, faseNombre, matchId) => {
+      const existingMatch = matches.find(m => m.id === matchId);
+      return {
+        id: matchId,
+        fase: faseNombre,
+        partido_numero: 1,
+        equipo_1_id: p1?.id ?? null,
+        equipo_1: p1?.nombre ?? null,
+        codigo_1: p1?.codigo ?? null,
+        bandera_1: p1?.bandera ?? null,
+        equipo_2_id: p2?.id ?? null,
+        equipo_2: p2?.nombre ?? null,
+        codigo_2: p2?.codigo ?? null,
+        bandera_2: p2?.bandera ?? null,
+        goles_1: existingMatch?.goles_1 ?? null,
+        goles_2: existingMatch?.goles_2 ?? null,
+        fecha_hora: existingMatch?.fecha_hora ?? null
+      };
+    };
+
+    // Cada ronda sale de la anterior (ganador/perdedor = calculado de los goles):
+    // RO16 (33-40) <- RO32 | QF (41-44) <- RO16 | SF (45-46) <- QF.
+    // Final (47) = ganadores de SF; 3er puesto (48) = perdedores de SF.
     const roundOf16 = construirRonda(roundOf32, 'RO16', 33);
     const quarterfinals = construirRonda(roundOf16, 'QF', 41);
     const semifinals = construirRonda(quarterfinals, 'SF', 45);
-    const final = null;
-    const thirdPlace = null;
+    const final = construirPartido(getGanador(semifinals[0]), getGanador(semifinals[1]), 'Final', 47);
+    const thirdPlace = construirPartido(getPerdedor(semifinals[0]), getPerdedor(semifinals[1]), 'Third Place', 48);
 
     return {
       statusCode: 200,
