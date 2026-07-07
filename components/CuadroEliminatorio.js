@@ -173,6 +173,7 @@ export default function CuadroEliminatorio() {
   const ro32 = cuadro?.roundOf32 || [];
   const ro16 = cuadro?.roundOf16 || [];
   const qf = cuadro?.quarterfinals || [];
+  const sf = cuadro?.semifinals || [];
 
   return (
     <div className={styles.containerFull}>
@@ -200,6 +201,16 @@ export default function CuadroEliminatorio() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className={styles.ro16Slot}>
                 {qf[i] && renderMatch(qf[i], true, i)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={styles.columnRO16}>
+          <h2 className={styles.columnTitle}>Eliminatoria de 4</h2>
+          <div className={styles.matchesListRO16}>
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className={styles.ro16Slot}>
+                {sf[i] && renderMatch(sf[i], true, i)}
               </div>
             ))}
           </div>

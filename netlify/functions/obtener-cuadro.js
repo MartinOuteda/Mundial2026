@@ -249,11 +249,11 @@ exports.handler = async (event) => {
       return ronda;
     };
 
-    // RO16 desde ganadores del RO32 (ids 33-40); QF (Eliminatoria de 8) desde
-    // ganadores del RO16 (ids 41-44). El ganador se calcula de los goles.
+    // Cada ronda sale de los ganadores de la anterior (ganador = calculado de goles):
+    // RO16 (ids 33-40) <- RO32 | QF/Elim. de 8 (41-44) <- RO16 | SF/Elim. de 4 (45-46) <- QF.
     const roundOf16 = construirRonda(roundOf32, 'RO16', 33);
     const quarterfinals = construirRonda(roundOf16, 'QF', 41);
-    const semifinals = [];
+    const semifinals = construirRonda(quarterfinals, 'SF', 45);
     const final = null;
     const thirdPlace = null;
 
