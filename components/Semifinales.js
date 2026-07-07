@@ -37,6 +37,8 @@ export default function Semifinales() {
   const [cargando, setCargando] = useState(true);
   const [editandoId, setEditandoId] = useState(null);
   const [golesEditando, setGolesEditando] = useState({ g1: '', g2: '' });
+  const [editandoFechaId, setEditandoFechaId] = useState(null);
+  const [fechaEditando, setFechaEditando] = useState('');
 
   useEffect(() => {
     cargar();
@@ -79,6 +81,28 @@ export default function Semifinales() {
     }
   };
 
+  const guardarFecha = async (matchId) => {
+    if (!fechaEditando.trim()) {
+      alert('Ingresá una fecha');
+      return;
+    }
+    try {
+      const res = await fetch('/.netlify/functions/guardar-fecha-hora', {
+        method: 'POST',
+        body: JSON.stringify({ matchId: parseInt(matchId), fechaHora: fechaEditando })
+      });
+      if (res.ok) {
+        setEditandoFechaId(null);
+        setFechaEditando('');
+        cargar();
+      } else {
+        alert('Error guardando fecha');
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
   const ganadorDe = (m) => {
     if (!m || m.goles_1 == null || m.goles_2 == null || m.goles_1 === m.goles_2) return null;
     return m.goles_1 > m.goles_2
@@ -91,6 +115,7 @@ export default function Semifinales() {
   const renderCard = (match, variante, label) => {
     if (!match) return null;
     const editando = editandoId === match.id;
+    const editandoFecha = editandoFechaId === match.id;
     const decidido = match.goles_1 != null && match.goles_2 != null && match.goles_1 !== match.goles_2;
     const gana1 = decidido && match.goles_1 > match.goles_2;
     const gana2 = decidido && match.goles_2 > match.goles_1;
@@ -98,6 +123,29 @@ export default function Semifinales() {
     return (
       <div className={`${styles.card} ${styles[variante] || ''}`}>
         <div className={styles.faseLabel}>{label}</div>
+
+        <div className={styles.fechaDisplay}>
+          {editandoFecha ? (
+            <div className={styles.fechaEdit}>
+              <input
+                type="text"
+                value={fechaEditando}
+                onChange={(e) => setFechaEditando(e.target.value)}
+                placeholder="Ej: Dom, 19/7, 4:00 p.m."
+                className={styles.fechaInput}
+              />
+              <button className={styles.btnSave} onClick={() => guardarFecha(match.id)}>✓</button>
+              <button className={styles.btnCancel} onClick={() => setEditandoFechaId(null)}>✗</button>
+            </div>
+          ) : (
+            <span
+              className={styles.fechaText}
+              onClick={() => { setEditandoFechaId(match.id); setFechaEditando(match.fecha_hora || ''); }}
+            >
+              {match.fecha_hora || '⏰ Agregar fecha'}
+            </span>
+          )}
+        </div>
 
         {editando ? (
           <div className={styles.editBox}>

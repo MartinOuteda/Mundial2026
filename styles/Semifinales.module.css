@@ -100,6 +100,54 @@
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
+/* ---------- FECHA / HORA ---------- */
+.fechaDisplay {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.fechaText {
+  color: #9aa3c7;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.fechaText:hover {
+  background: rgba(212, 175, 55, 0.12);
+  color: #d4af37;
+}
+
+.fechaEdit {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.fechaInput {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #f4d76b;
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+
+.fechaInput::placeholder {
+  color: rgba(212, 175, 55, 0.5);
+}
+
+.fechaInput:focus {
+  outline: none;
+  background: rgba(212, 175, 55, 0.18);
+}
+
 /* La final más grande y protagónica */
 .final {
   width: 280px;
